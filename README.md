@@ -58,11 +58,22 @@ npm run dev
 ```
 Truy cập: `http://localhost:5555` (không phải 127.0.0.1)
 
-#### Phương pháp 3: Deploy lên hosting
+#### Phương pháp 3: Deploy lên Vercel (Production)
 ```bash
-npm install -g vercel
-vercel
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy to production
+vercel --prod
 ```
+
+**Hoặc sử dụng GitHub Integration:**
+1. Push code lên GitHub
+2. Connect repository với Vercel
+3. Set environment variables trong Vercel dashboard
+4. Auto-deploy on every push
+
+Xem `DEPLOYMENT.md` để biết chi tiết về deploy.
 
 **Lưu ý**: Microphone chỉ hoạt động trên HTTPS hoặc localhost đặc biệt. Xem `MICROPHONE_SETUP.md` để biết chi tiết.
 

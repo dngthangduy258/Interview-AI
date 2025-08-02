@@ -1508,46 +1508,30 @@ async function callAzureOpenAI(prompt) {
     try {
         console.log('Calling Azure OpenAI with prompt:', prompt);
         
-        const response = await fetch(`${AZURE_CONFIG.ENDPOINT}openai/deployments/${AZURE_CONFIG.DEPLOYMENT}/chat/completions?api-version=${AZURE_CONFIG.API_VERSION}`, {
+        // Use Vercel API route instead of direct Azure call
+        const response = await fetch('/api/openai', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'api-key': AZURE_CONFIG.API_KEY
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are a Microsoft recruiter. Provide detailed and helpful feedback in Vietnamese.'
-                    },
-                    {
-                        role: 'user',
-                        content: prompt
-                    }
-                ],
-                max_tokens: 1000,
-                temperature: 0.7,
-                top_p: 1,
-                frequency_penalty: 0,
-                presence_penalty: 0
-            })
+            body: JSON.stringify({ prompt })
         });
 
         console.log('Response status:', response.status);
         
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Response error text:', errorText);
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            const errorData = await response.json();
+            console.error('API error:', errorData);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
         console.log('Response data:', data);
         
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-            return data.choices[0].message.content;
+        if (data.response) {
+            return data.response;
         } else {
-            throw new Error('Invalid response format from Azure OpenAI');
+            throw new Error('Invalid response format from API');
         }
     } catch (error) {
         console.error('Azure OpenAI API error:', error);

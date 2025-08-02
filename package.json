@@ -9,9 +9,10 @@
     "start-simple": "node server-simple.js",
     "dev": "live-server --port=5555 --host=localhost",
     "dev-https": "npm run setup && npm start",
-    "build": "echo 'No build process needed for static files'",
+    "build": "echo 'Static site - no build required'",
+    "vercel-build": "echo 'Static site - no build required'",
     "test": "echo 'Open demo.html to test features'",
-    "deploy": "echo 'Deploy to your preferred hosting service'"
+    "deploy": "vercel --prod"
   },
   "keywords": [
     "interview",
