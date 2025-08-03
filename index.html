@@ -199,9 +199,14 @@
                             <p class="text-red-600 font-medium">Recording...</p>
                         </div>
 
-                        <button id="recordButton" onclick="toggleRecording()" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition">
-                            Start Recording
-                        </button>
+                        <div class="flex space-x-4 mb-4">
+                            <button id="recordButton" onclick="toggleRecording()" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition">
+                                🎤 Start Recording
+                            </button>
+                            <button onclick="showTextInput()" class="bg-green-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-green-700 transition">
+                                ✏️ Type Answer
+                            </button>
+                        </div>
                         
                         <!-- Real-time transcript display -->
                         <div id="realTimeTranscript" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
