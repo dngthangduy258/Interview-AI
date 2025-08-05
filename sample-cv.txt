@@ -1,74 +1,76 @@
 NGUYỄN VĂN A
 Software Engineer
-Email: nguyenvana@email.com | Phone: 0123 456 789
+Email: nguyenvana@email.com
+Phone: +84 123 456 789
 LinkedIn: linkedin.com/in/nguyenvana
 
 TÓM TẮT
-Software Engineer với 3 năm kinh nghiệm phát triển ứng dụng web và mobile. Chuyên về React, Node.js, và cloud technologies. Có kinh nghiệm làm việc trong môi trường Agile và DevOps.
+Software Engineer với 3 năm kinh nghiệm phát triển ứng dụng web và mobile. Chuyên môn về React, Node.js, và cloud technologies. Có kinh nghiệm làm việc trong môi trường agile và team collaboration.
 
 KINH NGHIỆM LÀM VIỆC
 
-Software Engineer | TechCorp Vietnam | 2021 - Hiện tại
-• Phát triển và maintain 5+ ứng dụng web sử dụng React, Node.js, MongoDB
-• Làm việc trong team 8 người, sử dụng Agile methodology
-• Tối ưu hóa performance, giảm 40% thời gian load trang
-• Implement CI/CD pipeline với GitHub Actions
-• Mentor 2 junior developers
+Software Engineer - TechCorp Vietnam
+Tháng 1/2022 - Hiện tại
+- Phát triển và maintain 5+ web applications sử dụng React, Node.js
+- Làm việc với team 8 người trong môi trường agile
+- Tối ưu hóa performance, giảm 40% loading time
+- Mentor 2 junior developers
+- Technologies: React, Node.js, MongoDB, AWS
 
-Junior Developer | StartupXYZ | 2020 - 2021
-• Phát triển mobile app với React Native
-• Tích hợp REST APIs và third-party services
-• Tham gia code review và testing
-• Làm việc remote với team quốc tế
-
-HỌC VẤN
-
-Đại học Bách Khoa Hà Nội | 2016 - 2020
-• Chuyên ngành: Công nghệ thông tin
-• GPA: 3.8/4.0
-• Tham gia CLB Lập trình, đạt giải 3 hackathon cấp trường
+Junior Developer - StartupXYZ
+Tháng 6/2021 - Tháng 12/2021
+- Phát triển mobile app với React Native
+- Implement RESTful APIs với Express.js
+- Làm việc với PostgreSQL và Redis
+- Technologies: React Native, Express.js, PostgreSQL
 
 KỸ NĂNG KỸ THUẬT
+- Programming Languages: JavaScript, TypeScript, Python, Java
+- Frontend: React, React Native, HTML5, CSS3, Tailwind CSS
+- Backend: Node.js, Express.js, Python Flask
+- Database: MongoDB, PostgreSQL, Redis
+- Cloud: AWS, Docker, Kubernetes
+- Tools: Git, VS Code, Postman, Jira
 
-Programming Languages: JavaScript, TypeScript, Python, Java
-Frontend: React, React Native, Vue.js, HTML5, CSS3, SASS
-Backend: Node.js, Express.js, Python Flask
-Database: MongoDB, MySQL, PostgreSQL
-Cloud & DevOps: AWS, Docker, Kubernetes, GitHub Actions
-Tools: Git, VS Code, Postman, Figma
+HỌC VẤN
+Đại học Bách Khoa Hà Nội
+Cử nhân Công nghệ thông tin
+GPA: 3.8/4.0
+Tốt nghiệp: 2021
 
 DỰ ÁN TIÊU BIỂU
+1. E-commerce Platform (2023)
+   - Full-stack web application
+   - React + Node.js + MongoDB
+   - 10,000+ users, 50,000+ transactions
 
-E-commerce Platform | TechCorp
-• Full-stack development với React + Node.js
-• Tích hợp payment gateway và inventory management
-• Deploy trên AWS với Docker
-• 10,000+ active users
+2. Task Management App (2022)
+   - React Native mobile app
+   - Real-time collaboration
+   - 5,000+ downloads
 
-Task Management App | Personal Project
-• React Native app cho iOS và Android
-• Real-time synchronization với Firebase
-• Offline-first architecture
-• 5,000+ downloads trên App Store
+3. AI Chatbot Integration (2023)
+   - OpenAI API integration
+   - Natural language processing
+   - 95% accuracy rate
 
 CHỨNG CHỈ
-• AWS Certified Developer Associate
-• MongoDB Certified Developer
-• React Developer Certification
-
-HOẠT ĐỘNG NGOẠI KHÓA
-• Thành viên CLB Lập trình ĐHBK
-• Mentor cho sinh viên IT
-• Tham gia hackathon và coding competitions
-• Đóng góp open source projects trên GitHub
+- AWS Certified Developer Associate
+- MongoDB Certified Developer
+- React Developer Certification
 
 NGÔN NGỮ
-• Tiếng Việt: Bản ngữ
-• Tiếng Anh: Thành thạo (TOEIC 850)
-• Tiếng Nhật: Cơ bản (N3)
+- Tiếng Việt: Bản ngữ
+- Tiếng Anh: Thành thạo (TOEIC 850)
+- Tiếng Nhật: Cơ bản (N3)
 
-MỤC TIÊU NGHỀ NGHIỆP
-• Trở thành Senior Software Engineer trong 2 năm tới
-• Chuyên sâu về cloud architecture và microservices
-• Tham gia phát triển sản phẩm có tác động lớn
-• Mentor và đào tạo junior developers 
+HOẠT ĐỘNG
+- Thành viên Microsoft Student Partners (2020-2021)
+- Speaker tại Vietnam Web Summit 2023
+- Mentor tại CodeCamp Vietnam
+- Contributor cho 10+ open source projects
+
+MỤC TIÊU
+- Trở thành Senior Software Engineer trong 2 năm tới
+- Chuyên sâu về AI/ML và cloud architecture
+- Làm việc tại Microsoft hoặc các công ty công nghệ hàng đầu 

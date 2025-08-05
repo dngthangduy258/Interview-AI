@@ -15,6 +15,11 @@
 - **Câu hỏi cá nhân hóa**: Dựa trên kinh nghiệm và kỹ năng của bạn
 - **Đánh giá phù hợp**: Gợi ý vị trí phù hợp tại Microsoft
 
+**Lưu ý về file hỗ trợ:**
+- **TXT, DOC, DOCX**: Hỗ trợ đầy đủ AI phân tích
+- **PDF**: Hỗ trợ hạn chế, khuyến nghị chuyển đổi sang text
+- **Hình ảnh**: Không hỗ trợ OCR, khuyến nghị chuyển đổi sang text
+
 ### 🎤 Ghi âm và AI feedback
 - **Ghi âm thực tế**: Sử dụng microphone để ghi âm câu trả lời
 - **AI phân tích**: Đánh giá nội dung, phát âm, ngữ điệu
@@ -39,12 +44,27 @@
 - **AI**: Azure OpenAI API
 - **Audio**: Web Audio API
 - **File Processing**: File API
+- **Server**: Node.js + Express (HTTPS)
 
 ## 🚀 Cách sử dụng
 
 ### 1. Setup và chạy ứng dụng
 
-#### Phương pháp 1: HTTPS Server (Khuyến nghị cho microphone)
+#### Phương pháp 1: Development với API Support (Khuyến nghị)
+```bash
+# Cách 1: Sử dụng script batch (Windows)
+start-dev.bat
+
+# Cách 2: Chạy thủ công
+# Terminal 1: Chạy server với API
+npm run start-simple
+
+# Terminal 2: Chạy Live Server cho frontend
+npm run dev
+```
+Truy cập: `http://localhost:5555` (Frontend) và `http://localhost:5556/api/openai` (API)
+
+#### Phương pháp 2: HTTPS Server (Cho microphone)
 ```bash
 npm install
 npm run setup
@@ -52,13 +72,15 @@ npm start
 ```
 Truy cập: `https://localhost:5557`
 
-#### Phương pháp 2: Live Server
+#### Phương pháp 3: Chỉ Live Server (Không có AI feedback)
 ```bash
 npm run dev
 ```
-Truy cập: `http://localhost:5555` (không phải 127.0.0.1)
+Truy cập: `http://localhost:5555`
 
-#### Phương pháp 3: Deploy lên Vercel (Production)
+**Lưu ý**: Phương pháp 3 sẽ không có AI feedback vì Live Server không hỗ trợ API routes.
+
+#### Phương pháp 4: Deploy lên Vercel (Production)
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -77,7 +99,27 @@ Xem `DEPLOYMENT.md` để biết chi tiết về deploy.
 
 **Lưu ý**: Microphone chỉ hoạt động trên HTTPS hoặc localhost đặc biệt. Xem `MICROPHONE_SETUP.md` để biết chi tiết.
 
-### 2. Bắt đầu luyện tập
+### 2. Cấu hình Azure OpenAI
+
+#### Bước 1: Tạo Azure OpenAI Resource
+1. Truy cập [Azure Portal](https://portal.azure.com)
+2. Tạo Azure OpenAI resource
+3. Deploy model GPT-35-Turbo
+4. Lấy API key và endpoint
+
+#### Bước 2: Cấu hình Environment Variables
+Tạo file `.env` trong thư mục gốc:
+```env
+AZURE_OPENAI_API_KEY=your_api_key_here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo
+AZURE_OPENAI_API_VERSION=2024-02-15-preview
+```
+
+#### Bước 3: Test API
+Nhấn nút "Test API" trong ứng dụng để kiểm tra kết nối.
+
+### 3. Bắt đầu luyện tập
 
 #### Bước 1: Import CV (Khuyến nghị)
 - Nhấn "Import CV trước"
@@ -94,7 +136,24 @@ Xem `DEPLOYMENT.md` để biết chi tiết về deploy.
 - Trả lời câu hỏi bằng giọng nói
 - Nhận feedback chi tiết từ AI
 
-### 3. Cấu trúc câu hỏi
+### 4. Test ứng dụng
+
+Sau khi chạy ứng dụng, bạn có thể test các tính năng:
+
+#### Test nhanh:
+- Truy cập: `http://localhost:5555/test-app.html`
+- Test API connection
+- Test microphone
+- Test CV upload
+- Kiểm tra server status
+
+#### Test từng tính năng:
+1. **Test API**: Nhấn "Test API" trong ứng dụng chính
+2. **Test Microphone**: Nhấn "Bắt đầu ghi âm" trong phỏng vấn
+3. **Test CV Upload**: Upload file CV và xem phân tích AI
+4. **Test Interview**: Bắt đầu luyện tập phỏng vấn
+
+### 5. Cấu trúc câu hỏi
 
 #### Câu hỏi Microsoft chuẩn:
 1. **Giới thiệu**: Tell me about yourself
@@ -121,16 +180,21 @@ microsoft-interview-pro/
 ├── script.js               # Logic chính
 ├── config.js               # Cấu hình Azure OpenAI
 ├── styles.css              # CSS tùy chỉnh
+├── test-app.html           # Trang test ứng dụng
 ├── test-mic.html           # Test microphone
 ├── microphone-fix.html     # Khắc phục vấn đề microphone
 ├── sample-cv.txt           # CV mẫu để test
 ├── package.json            # Dependencies
 ├── server.js               # HTTPS server
-├── server-simple.js        # HTTP server
+├── server-simple.js        # HTTP server với API
 ├── setup-ssl.js            # Setup SSL certificates
+├── start-dev.bat           # Script chạy development servers
 ├── start-localhost.bat     # Chạy với localhost
+├── api/
+│   └── openai.js          # API route cho Azure OpenAI
 ├── MICROPHONE_SETUP.md     # Hướng dẫn microphone
 ├── QUICK_START.md          # Hướng dẫn nhanh
+├── DEPLOYMENT.md           # Hướng dẫn deploy
 └── README.md               # Tài liệu này
 ```
 
@@ -174,6 +238,10 @@ microsoft-interview-pro/
 ### Vấn đề AI feedback
 - **Feedback không hiển thị**: Kiểm tra Azure OpenAI API key
 - **Lỗi API**: Xem console để debug
+
+### Vấn đề SSL Certificate
+- **Certificate không tin tưởng**: Nhấp "Advanced" và chọn "Proceed"
+- **Lỗi mkcert**: Cài đặt mkcert hoặc sử dụng Live Server
 
 ## 🚀 Deploy
 

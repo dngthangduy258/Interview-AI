@@ -6,6 +6,8 @@
     <title>Microsoft Interview Pro - Practice Microsoft Interviews</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://unpkg.com/tesseract.js@v4.1.1/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
@@ -114,10 +116,6 @@
                         </div>
 
                         <div class="text-center space-y-2">
-                            <button id="analyzeCV" onclick="analyzeCV()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition hidden">
-                                <i data-feather="search" class="w-4 h-4 inline mr-2"></i>
-                                Analyze CV
-                            </button>
                             <button id="startInterview" onclick="startInterviewWithCV()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition hidden">
                                 <i data-feather="play" class="w-4 h-4 inline mr-2"></i>
                                 Start Interview
@@ -156,11 +154,31 @@
                         </div>
                     </div>
 
-                    <!-- Question Display -->
+                    <!-- Question Display with TTS -->
                     <div class="mb-8">
-                        <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Question:</h4>
-                            <p id="currentQuestionText" class="text-xl text-gray-700">Tell me about yourself.</p>
+                        <div class="bg-gray-50 rounded-lg p-6 mb-6 relative">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-gray-800">Question:</h4>
+                                <div class="flex items-center space-x-2">
+                                    <button id="speakButton" onclick="speakCurrentQuestion()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
+                                        <i data-feather="volume-2" class="w-4 h-4 inline mr-1"></i>
+                                        Speak
+                                    </button>
+                                    <button id="toggleTextButton" onclick="toggleQuestionText()" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition">
+                                        <i data-feather="eye" class="w-4 h-4 inline mr-1"></i>
+                                        Show Text
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="questionTextContainer" class="relative">
+                                <p id="currentQuestionText" class="text-xl text-gray-700 hidden">Tell me about yourself.</p>
+                                <div id="questionStatus" class="text-center py-8">
+                                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i data-feather="play" class="w-8 h-8 text-blue-600"></i>
+                                    </div>
+                                    <p class="text-gray-600">Question will be spoken automatically</p>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Text input mode banner -->

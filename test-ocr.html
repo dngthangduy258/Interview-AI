@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/tesseract.js@v4.1.1/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">🧪 OCR Test</h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">Test OCR Functionality</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Upload file to test OCR
+                    </label>
+                    <input type="file" id="testFile" accept=".pdf,.png,.jpg,.jpeg" 
+                           class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                
+                <button onclick="testOCR()" 
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Test OCR
+                </button>
+            </div>
+            
+            <div id="testResult" class="mt-4 p-3 bg-gray-100 rounded text-sm">
+                No test performed yet...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+        async function testOCR() {
+            const fileInput = document.getElementById('testFile');
+            const file = fileInput.files[0];
+            const resultDiv = document.getElementById('testResult');
+            
+            if (!file) {
+                resultDiv.innerHTML = '❌ Please select a file first';
+                return;
+            }
+            
+            resultDiv.innerHTML = '🔄 Testing OCR...';
+            
+            try {
+                const fileType = file.type.toLowerCase();
+                const fileName = file.name.toLowerCase();
+                
+                let extractedText = '';
+                
+                if (fileType.includes('pdf') || fileName.endsWith('.pdf')) {
+                    resultDiv.innerHTML = '🔄 Processing PDF with OCR...';
+                    extractedText = await processPDFWithOCR(file);
+                } else if (fileType.includes('image') || fileName.match(/\.(png|jpg|jpeg|gif|bmp|tiff)$/)) {
+                    resultDiv.innerHTML = '🔄 Processing image with OCR...';
+                    extractedText = await processImageWithOCR(file);
+                } else {
+                    resultDiv.innerHTML = '❌ Unsupported file type';
+                    return;
+                }
+                
+                resultDiv.innerHTML = `
+                    ✅ OCR Test Successful!<br>
+                    <strong>Extracted Text:</strong><br>
+                    <pre class="mt-2 p-2 bg-white border rounded text-xs overflow-auto max-h-40">${extractedText.substring(0, 500)}${extractedText.length > 500 ? '...' : ''}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('OCR test error:', error);
+                resultDiv.innerHTML = `❌ OCR Test Failed: ${error.message}`;
+            }
+        }
+
+        async function processPDFWithOCR(file) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                
+                let fullText = '';
+                const totalPages = Math.min(pdf.numPages, 2); // Limit to first 2 pages for testing
+                
+                for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 2.0 });
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    await page.render({ canvasContext: context, viewport }).promise;
+                    
+                    const { data: { text } } = await Tesseract.recognize(canvas, 'eng+vie');
+                    fullText += `\n\n--- PAGE ${pageNum} ---\n\n${text}`;
+                }
+                
+                return fullText;
+                
+            } catch (error) {
+                throw new Error(`PDF OCR failed: ${error.message}`);
+            }
+        }
+
+        async function processImageWithOCR(file) {
+            try {
+                const { data: { text } } = await Tesseract.recognize(file, 'eng+vie');
+                return text;
+                
+            } catch (error) {
+                throw new Error(`Image OCR failed: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html> 

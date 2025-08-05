@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Microsoft Interview Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/tesseract.js@v4.1.1/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">🧪 Test Microsoft Interview Pro</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Test API -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">🔌 Test API Connection</h2>
+                <button onclick="testAPI()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Test API
+                </button>
+                <div id="apiResult" class="mt-4 p-3 bg-gray-100 rounded text-sm"></div>
+            </div>
+
+            <!-- Test Microphone -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">🎤 Test Microphone</h2>
+                <button onclick="testMicrophone()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Test Microphone
+                </button>
+                <div id="micResult" class="mt-4 p-3 bg-gray-100 rounded text-sm"></div>
+            </div>
+
+            <!-- Test CV Upload -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📄 Test CV Upload</h2>
+                <input type="file" id="cvFile" accept=".pdf,.doc,.docx,.txt" class="mb-4">
+                <button onclick="testCVUpload()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    Test CV Analysis
+                </button>
+                <div id="cvResult" class="mt-4 p-3 bg-gray-100 rounded text-sm"></div>
+            </div>
+
+            <!-- Test OCR -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">🔍 Test OCR</h2>
+                <input type="file" id="ocrFile" accept=".pdf,.png,.jpg,.jpeg" class="mb-4">
+                <button onclick="testOCR()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                    Test OCR Processing
+                </button>
+                <div id="ocrResult" class="mt-4 p-3 bg-gray-100 rounded text-sm"></div>
+            </div>
+
+            <!-- Test TTS -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">🎤 Test TTS</h2>
+                <textarea id="ttsText" class="w-full p-2 border rounded mb-4" rows="3" placeholder="Enter text to speak...">Hello, this is a test of the Text-to-Speech functionality.</textarea>
+                <div class="flex space-x-2 mb-4">
+                    <button onclick="testTTS()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        🎤 Speak
+                    </button>
+                    <button onclick="stopTTS()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                        ⏹️ Stop
+                    </button>
+                </div>
+                <div id="ttsResult" class="mt-4 p-3 bg-gray-100 rounded text-sm"></div>
+            </div>
+
+            <!-- Test Server Status -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">🖥️ Server Status</h2>
+                <button onclick="checkServers()" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+                    Check Servers
+                </button>
+                <div id="serverResult" class="mt-4 p-3 bg-gray-100 rounded text-sm"></div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">🔗 Quick Links</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="http://localhost:5555" target="_blank" class="bg-blue-600 text-white p-4 rounded text-center hover:bg-blue-700">
+                    🏠 Main App (Frontend)
+                </a>
+                <a href="http://localhost:5556/api/openai" target="_blank" class="bg-green-600 text-white p-4 rounded text-center hover:bg-green-700">
+                    🔌 API Endpoint
+                </a>
+                <a href="https://localhost:5557" target="_blank" class="bg-purple-600 text-white p-4 rounded text-center hover:bg-purple-700">
+                    🔒 HTTPS Server
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.innerHTML = '🔄 Testing API...';
+            
+            try {
+                const response = await fetch('http://localhost:5556/api/openai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Test API connection for Microsoft Interview Pro'
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `✅ API Working!<br><strong>Response:</strong> ${data.response.substring(0, 100)}...`;
+                } else {
+                    resultDiv.innerHTML = `❌ API Error: ${response.status} ${response.statusText}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ API Error: ${error.message}`;
+            }
+        }
+
+        async function testMicrophone() {
+            const resultDiv = document.getElementById('micResult');
+            resultDiv.innerHTML = '🔄 Testing microphone...';
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                resultDiv.innerHTML = '✅ Microphone working! Stream obtained successfully.';
+                stream.getTracks().forEach(track => track.stop());
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Microphone Error: ${error.message}`;
+            }
+        }
+
+        async function testCVUpload() {
+            const resultDiv = document.getElementById('cvResult');
+            const fileInput = document.getElementById('cvFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                resultDiv.innerHTML = '❌ Please select a file first';
+                return;
+            }
+            
+            resultDiv.innerHTML = '🔄 Testing CV upload...';
+            
+            try {
+                const text = await file.text();
+                resultDiv.innerHTML = `✅ File loaded successfully!<br><strong>Size:</strong> ${file.size} bytes<br><strong>Type:</strong> ${file.type}`;
+            } catch (error) {
+                resultDiv.innerHTML = `❌ File Error: ${error.message}`;
+            }
+        }
+
+        async function checkServers() {
+            const resultDiv = document.getElementById('serverResult');
+            resultDiv.innerHTML = '🔄 Checking servers...';
+            
+            const servers = [
+                { name: 'Frontend (5555)', url: 'http://localhost:5555' },
+                { name: 'API (5556)', url: 'http://localhost:5556/api/openai' },
+                { name: 'HTTPS (5557)', url: 'https://localhost:5557' }
+            ];
+            
+            let results = '';
+            
+            for (const server of servers) {
+                try {
+                    const response = await fetch(server.url, { method: 'GET' });
+                    results += `✅ ${server.name}: ${response.status}<br>`;
+                } catch (error) {
+                    results += `❌ ${server.name}: ${error.message}<br>`;
+                }
+            }
+            
+            resultDiv.innerHTML = results;
+        }
+
+        async function testOCR() {
+            const resultDiv = document.getElementById('ocrResult');
+            const fileInput = document.getElementById('ocrFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                resultDiv.innerHTML = '❌ Please select a file first';
+                return;
+            }
+            
+            resultDiv.innerHTML = '🔄 Testing OCR...';
+            
+            try {
+                const fileType = file.type.toLowerCase();
+                const fileName = file.name.toLowerCase();
+                
+                let extractedText = '';
+                
+                if (fileType.includes('pdf') || fileName.endsWith('.pdf')) {
+                    resultDiv.innerHTML = '🔄 Processing PDF with OCR...';
+                    extractedText = await processPDFWithOCR(file);
+                } else if (fileType.includes('image') || fileName.match(/\.(png|jpg|jpeg|gif|bmp|tiff)$/)) {
+                    resultDiv.innerHTML = '🔄 Processing image with OCR...';
+                    extractedText = await processImageWithOCR(file);
+                } else {
+                    resultDiv.innerHTML = '❌ Unsupported file type';
+                    return;
+                }
+                
+                resultDiv.innerHTML = `
+                    ✅ OCR Test Successful!<br>
+                    <strong>Extracted Text:</strong><br>
+                    <pre class="mt-2 p-2 bg-white border rounded text-xs overflow-auto max-h-40">${extractedText.substring(0, 500)}${extractedText.length > 500 ? '...' : ''}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('OCR test error:', error);
+                resultDiv.innerHTML = `❌ OCR Test Failed: ${error.message}`;
+            }
+        }
+
+        async function processPDFWithOCR(file) {
+            try {
+                // Check if PDF.js is available
+                if (typeof pdfjsLib === 'undefined') {
+                    throw new Error('PDF.js library not loaded');
+                }
+                
+                // Initialize PDF.js
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+                
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                
+                let fullText = '';
+                const totalPages = Math.min(pdf.numPages, 2); // Limit to first 2 pages for testing
+                
+                for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 2.0 });
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    await page.render({ canvasContext: context, viewport }).promise;
+                    
+                    const { data: { text } } = await Tesseract.recognize(canvas, 'eng+vie');
+                    fullText += `\n\n--- PAGE ${pageNum} ---\n\n${text}`;
+                }
+                
+                return fullText;
+                
+            } catch (error) {
+                throw new Error(`PDF OCR failed: ${error.message}`);
+            }
+        }
+
+        async function processImageWithOCR(file) {
+            try {
+                const { data: { text } } = await Tesseract.recognize(file, 'eng+vie');
+                return text;
+                
+            } catch (error) {
+                throw new Error(`Image OCR failed: ${error.message}`);
+            }
+        }
+
+        async function testTTS() {
+            const resultDiv = document.getElementById('ttsResult');
+            const textInput = document.getElementById('ttsText');
+            const text = textInput.value;
+            
+            if (!text.trim()) {
+                resultDiv.innerHTML = '❌ Please enter some text to speak';
+                return;
+            }
+            
+            resultDiv.innerHTML = '🔄 Testing TTS...';
+            
+            try {
+                // Stop any current speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                utterance.onend = () => {
+                    resultDiv.innerHTML = '✅ TTS Test Successful! Text was spoken successfully.';
+                };
+                
+                utterance.onerror = (event) => {
+                    console.error('TTS error:', event);
+                    resultDiv.innerHTML = `❌ TTS Error: ${event.error}`;
+                };
+                
+                speechSynthesis.speak(utterance);
+                resultDiv.innerHTML = '🔄 Speaking...';
+                
+            } catch (error) {
+                console.error('TTS test error:', error);
+                resultDiv.innerHTML = `❌ TTS Test Failed: ${error.message}`;
+            }
+        }
+
+        function stopTTS() {
+            speechSynthesis.cancel();
+            const resultDiv = document.getElementById('ttsResult');
+            resultDiv.innerHTML = '⏹️ TTS stopped.';
+        }
+
+        // Auto-check servers on load
+        window.onload = function() {
+            checkServers();
+        };
+    </script>
+</body>
+</html> 

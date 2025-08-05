@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Suggestions Test - Microsoft Interview Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">🎯 Role Suggestions Test</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- CV Input -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📄 CV Information</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Position:</label>
+                        <input type="text" id="currentPosition" value="Customer Service Representative" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Experience Summary:</label>
+                        <textarea id="experienceSummary" rows="3" class="w-full p-2 border border-gray-300 rounded-md">Led customer support team of 8 people. Handled customer inquiries, resolved complaints, and managed client relationships. Achieved 95% customer satisfaction rate.</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Education:</label>
+                        <input type="text" id="education" value="Business Administration - University of Economics" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Skills (comma separated):</label>
+                        <input type="text" id="skills" value="Customer Service, CRM, Communication, Problem Solving, Team Leadership" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="testRoleSuggestions()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            🎯 Test AI Suggestions
+                        </button>
+                        <button onclick="testFallbackSuggestions()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                            🔧 Test Fallback
+                        </button>
+                        <button onclick="clearResults()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📊 Role Suggestions</h2>
+                
+                <div id="results" class="space-y-4">
+                    <div class="text-gray-500 text-center py-8">
+                        Click "Test AI Suggestions" to see role recommendations
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Cases -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">🧪 Test Cases</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="loadTestCase('customer-service')" class="bg-blue-100 p-4 rounded-lg hover:bg-blue-200 transition">
+                    <h3 class="font-semibold text-blue-800">Customer Service</h3>
+                    <p class="text-sm text-blue-600">Customer Service Representative, CRM, Support</p>
+                </button>
+                
+                <button onclick="loadTestCase('sales')" class="bg-green-100 p-4 rounded-lg hover:bg-green-200 transition">
+                    <h3 class="font-semibold text-green-800">Sales</h3>
+                    <p class="text-sm text-green-600">Sales Manager, Account Management, Business Development</p>
+                </button>
+                
+                <button onclick="loadTestCase('marketing')" class="bg-purple-100 p-4 rounded-lg hover:bg-purple-200 transition">
+                    <h3 class="font-semibold text-purple-800">Marketing</h3>
+                    <p class="text-sm text-purple-600">Marketing Specialist, Digital Marketing, Campaign Management</p>
+                </button>
+                
+                <button onclick="loadTestCase('hr')" class="bg-orange-100 p-4 rounded-lg hover:bg-orange-200 transition">
+                    <h3 class="font-semibold text-orange-800">HR</h3>
+                    <p class="text-sm text-orange-600">HR Specialist, Recruitment, Talent Acquisition</p>
+                </button>
+                
+                <button onclick="loadTestCase('operations')" class="bg-red-100 p-4 rounded-lg hover:bg-red-200 transition">
+                    <h3 class="font-semibold text-red-800">Operations</h3>
+                    <p class="text-sm text-red-600">Operations Manager, Project Management, Coordination</p>
+                </button>
+                
+                <button onclick="loadTestCase('technical')" class="bg-indigo-100 p-4 rounded-lg hover:bg-indigo-200 transition">
+                    <h3 class="font-semibold text-indigo-800">Technical</h3>
+                    <p class="text-sm text-indigo-600">Software Engineer, React, Python, AI</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Expected Results -->
+        <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-yellow-800 mb-4">🎯 Expected Results</h2>
+            
+            <div class="space-y-3 text-yellow-700">
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">✅</span>
+                    <div>
+                        <p class="font-medium">Customer Service CV → Non-technical roles:</p>
+                        <p class="text-sm">Customer Success Manager, Client Support Lead, Customer Experience Specialist</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">✅</span>
+                    <div>
+                        <p class="font-medium">Sales CV → Business roles:</p>
+                        <p class="text-sm">Account Manager, Business Development Manager, Sales Specialist</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">✅</span>
+                    <div>
+                        <p class="font-medium">Technical CV → Technical roles:</p>
+                        <p class="text-sm">Software Engineer, AI Engineer, Data Scientist (only if clearly technical)</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">❌</span>
+                    <div>
+                        <p class="font-medium">Customer Service CV → Should NOT suggest:</p>
+                        <p class="text-sm">AI Engineer, Machine Learning Engineer, Data Scientist</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Copy the suggestJobTitlesFromCV function from script.js
+        async function suggestJobTitlesFromCV(cvData) {
+            try {
+                console.log('Suggesting job titles using AI...');
+                
+                const suggestRolesPrompt = `
+You're an AI recruiter at Microsoft.
+
+Based on the candidate's CV summary below, suggest **3 to 5 real job titles** that would be suitable at Microsoft.
+
+These roles should:
+- Match the candidate's background, skills, and experience
+- Be realistic and not overly technical if not appropriate
+- Prefer roles in customer service, operations, business, or product if relevant
+- Avoid suggesting technical roles (like AI Engineer, Data Scientist) unless the candidate has clear technical background
+
+CV Summary:
+- Current Position: ${cvData.basicInfo?.currentPosition || 'N/A'}
+- Experience Summary: ${cvData.experience?.summary || cvData.experience || 'N/A'}
+- Education: ${cvData.education?.background || cvData.education || 'N/A'}
+- Skills: ${Array.isArray(cvData.skills) ? cvData.skills.join(', ') : (cvData.skills || 'N/A')}
+- Recommended Position (if any): ${cvData.recommendedPosition || 'N/A'}
+
+Return JSON array of job titles like:
+["Customer Success Manager", "Product Support Lead", "Client Engagement Specialist"]
+
+Only return the JSON array. No explanation.
+`;
+
+                // Simulate AI response for demo
+                const mockResponse = getMockAIResponse(cvData);
+                
+                // Parse JSON response
+                const jsonMatch = mockResponse.match(/\[[\s\S]*\]/);
+                if (jsonMatch) {
+                    const suggestions = JSON.parse(jsonMatch[0]);
+                    console.log('AI suggested roles:', suggestions);
+                    return suggestions;
+                } else {
+                    console.warn('No JSON array found in AI response, using fallback');
+                    return getFallbackSuggestions(cvData);
+                }
+                
+            } catch (error) {
+                console.error('Error getting AI suggestions:', error);
+                console.log('Using fallback suggestions');
+                return getFallbackSuggestions(cvData);
+            }
+        }
+
+        // Mock AI response based on CV data
+        function getMockAIResponse(cvData) {
+            const currentPosition = (cvData.basicInfo?.currentPosition || '').toLowerCase();
+            const experience = (cvData.experience?.summary || cvData.experience || '').toLowerCase();
+            const skills = Array.isArray(cvData.skills) 
+                ? cvData.skills.map(s => s.toLowerCase())
+                : (cvData.skills || '').toLowerCase().split(',').map(s => s.trim().toLowerCase());
+            
+            // Customer Service
+            if (currentPosition.includes('customer') || experience.includes('customer') || 
+                skills.some(s => ['customer service', 'support', 'client'].includes(s))) {
+                return '["Customer Success Manager", "Client Support Lead", "Customer Experience Specialist", "Product Support Coordinator"]';
+            }
+            
+            // Sales
+            if (currentPosition.includes('sales') || experience.includes('sales') || 
+                skills.some(s => ['sales', 'business', 'account'].includes(s))) {
+                return '["Account Manager", "Business Development Manager", "Sales Specialist", "Client Relationship Manager"]';
+            }
+            
+            // Marketing
+            if (currentPosition.includes('marketing') || experience.includes('marketing') || 
+                skills.some(s => ['marketing', 'campaign', 'social media'].includes(s))) {
+                return '["Marketing Manager", "Digital Marketing Specialist", "Campaign Manager", "Brand Specialist"]';
+            }
+            
+            // HR
+            if (currentPosition.includes('hr') || experience.includes('hr') || 
+                skills.some(s => ['hr', 'recruitment', 'talent'].includes(s))) {
+                return '["HR Specialist", "Talent Acquisition Manager", "People Operations", "Recruitment Coordinator"]';
+            }
+            
+            // Technical (only if clearly technical)
+            if (skills.some(s => ['react', 'python', 'javascript', 'ai', 'machine learning'].includes(s))) {
+                return '["Software Engineer", "AI Engineer", "Data Scientist", "Machine Learning Engineer"]';
+            }
+            
+            // Default
+            return '["Customer Success Manager", "Operations Specialist", "Business Analyst", "Project Coordinator"]';
+        }
+
+        // Fallback suggestions based on simple rules
+        function getFallbackSuggestions(cvData) {
+            const skills = Array.isArray(cvData.skills) 
+                ? cvData.skills.map(s => s.toLowerCase())
+                : (cvData.skills || '').toLowerCase().split(',').map(s => s.trim().toLowerCase());
+            
+            const experience = (cvData.experience?.summary || cvData.experience || '').toLowerCase();
+            const currentPosition = (cvData.basicInfo?.currentPosition || '').toLowerCase();
+            
+            const titleSuggestions = [];
+            
+            // Customer Service / Support roles
+            if (experience.includes('customer') || experience.includes('support') || 
+                experience.includes('client') || currentPosition.includes('customer') ||
+                skills.some(s => ['customer service', 'support', 'client'].includes(s))) {
+                titleSuggestions.push("Customer Success Manager", "Client Support Lead", "Customer Experience Specialist");
+            }
+            
+            // Sales / Business roles
+            if (experience.includes('sales') || experience.includes('business') || 
+                experience.includes('account') || currentPosition.includes('sales') ||
+                skills.some(s => ['sales', 'business', 'account'].includes(s))) {
+                titleSuggestions.push("Account Manager", "Business Development Manager", "Sales Specialist");
+            }
+            
+            // Marketing roles
+            if (experience.includes('marketing') || experience.includes('campaign') || 
+                currentPosition.includes('marketing') ||
+                skills.some(s => ['marketing', 'campaign', 'social media'].includes(s))) {
+                titleSuggestions.push("Marketing Manager", "Digital Marketing Specialist", "Campaign Manager");
+            }
+            
+            // HR / People roles
+            if (experience.includes('hr') || experience.includes('human resource') || 
+                experience.includes('recruitment') || currentPosition.includes('hr') ||
+                skills.some(s => ['hr', 'recruitment', 'talent'].includes(s))) {
+                titleSuggestions.push("HR Specialist", "Talent Acquisition Manager", "People Operations");
+            }
+            
+            // Operations / Project Management
+            if (experience.includes('operations') || experience.includes('project') || 
+                experience.includes('coordination') || currentPosition.includes('operations') ||
+                skills.some(s => ['operations', 'project management', 'coordination'].includes(s))) {
+                titleSuggestions.push("Operations Manager", "Project Coordinator", "Program Manager");
+            }
+            
+            // Technical roles (only if clearly technical background)
+            if (skills.some(s => ['react', 'angular', 'vue', 'javascript', 'html', 'css'].includes(s)) || 
+                experience.includes('frontend') || experience.includes('web')) {
+                titleSuggestions.push("Frontend Developer", "Full Stack Developer");
+            }
+            
+            if (skills.some(s => ['node.js', 'python', 'java', 'c#', '.net', 'spring'].includes(s)) || 
+                experience.includes('backend') || experience.includes('api')) {
+                titleSuggestions.push("Backend Developer", "Full Stack Developer");
+            }
+            
+            if (skills.some(s => ['python', 'tensorflow', 'pytorch', 'machine learning', 'ai'].includes(s)) || 
+                experience.includes('machine learning') || experience.includes('ai')) {
+                titleSuggestions.push("AI Engineer", "Machine Learning Engineer", "Data Scientist");
+            }
+            
+            if (skills.some(s => ['python', 'sql', 'data analysis'].includes(s)) || 
+                experience.includes('data') || experience.includes('analytics')) {
+                titleSuggestions.push("Data Scientist", "Data Analyst", "Business Intelligence Engineer");
+            }
+            
+            // Product roles
+            if (experience.includes('product') || experience.includes('roadmap') || 
+                skills.some(s => ['agile', 'scrum', 'product management'].includes(s))) {
+                titleSuggestions.push("Product Manager", "Technical Product Manager");
+            }
+            
+            // Design roles
+            if (skills.some(s => ['figma', 'sketch', 'adobe', 'ui', 'ux', 'design'].includes(s)) || 
+                experience.includes('ui/ux') || experience.includes('design')) {
+                titleSuggestions.push("UX Designer", "UI/UX Designer", "Product Designer");
+            }
+            
+            // Default suggestions if no specific match
+            if (titleSuggestions.length === 0) {
+                titleSuggestions.push("Customer Success Manager", "Operations Specialist", "Business Analyst");
+            }
+            
+            // Remove duplicates and limit to 5 suggestions
+            const uniqueSuggestions = [...new Set(titleSuggestions)];
+            return uniqueSuggestions.slice(0, 5);
+        }
+
+        async function testRoleSuggestions() {
+            const resultsDiv = document.getElementById('results');
+            
+            // Get CV data from form
+            const cvData = {
+                basicInfo: {
+                    currentPosition: document.getElementById('currentPosition').value
+                },
+                experience: {
+                    summary: document.getElementById('experienceSummary').value
+                },
+                education: {
+                    background: document.getElementById('education').value
+                },
+                skills: document.getElementById('skills').value.split(',').map(s => s.trim())
+            };
+            
+            // Show loading
+            resultsDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-blue-800">Getting AI suggestions...</span>
+                        <span class="text-sm text-blue-600">Processing</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse" style="width: 60%"></div>
+                    </div>
+                    <div class="text-xs text-blue-600">
+                        <i data-feather="loader" class="w-4 h-4 inline mr-1 animate-spin"></i>
+                        Analyzing CV and generating role suggestions...
+                    </div>
+                </div>
+            `;
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Generate suggestions
+            const suggestions = await suggestJobTitlesFromCV(cvData);
+            
+            // Display results
+            let html = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <h3 class="font-semibold text-green-800 mb-2">✅ AI Role Suggestions</h3>
+                    <p class="text-sm text-green-700">Based on your CV, here are the recommended roles at Microsoft:</p>
+                </div>
+                <div class="space-y-3">
+            `;
+            
+            suggestions.forEach((role, index) => {
+                html += `
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm text-blue-600 font-medium">${index + 1}.</span>
+                                <span class="text-blue-800 font-medium ml-2">${role}</span>
+                            </div>
+                            <button onclick="selectRole('${role}')" class="bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 transition">
+                                Select
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                </div>
+                <div class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <h4 class="font-semibold text-yellow-800 mb-2">💡 Analysis</h4>
+                    <p class="text-sm text-yellow-700">
+                        <strong>Current Position:</strong> ${cvData.basicInfo.currentPosition}<br>
+                        <strong>Experience:</strong> ${cvData.experience.summary.substring(0, 100)}...<br>
+                        <strong>Skills:</strong> ${cvData.skills.join(', ')}
+                    </p>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function testFallbackSuggestions() {
+            const resultsDiv = document.getElementById('results');
+            
+            // Get CV data from form
+            const cvData = {
+                basicInfo: {
+                    currentPosition: document.getElementById('currentPosition').value
+                },
+                experience: {
+                    summary: document.getElementById('experienceSummary').value
+                },
+                education: {
+                    background: document.getElementById('education').value
+                },
+                skills: document.getElementById('skills').value.split(',').map(s => s.trim())
+            };
+            
+            // Generate fallback suggestions
+            const suggestions = getFallbackSuggestions(cvData);
+            
+            // Display results
+            let html = `
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                    <h3 class="font-semibold text-orange-800 mb-2">🔧 Fallback Role Suggestions</h3>
+                    <p class="text-sm text-orange-700">Using rule-based suggestions (AI not available):</p>
+                </div>
+                <div class="space-y-3">
+            `;
+            
+            suggestions.forEach((role, index) => {
+                html += `
+                    <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm text-orange-600 font-medium">${index + 1}.</span>
+                                <span class="text-orange-800 font-medium ml-2">${role}</span>
+                            </div>
+                            <button onclick="selectRole('${role}')" class="bg-orange-600 text-white text-xs px-3 py-1 rounded hover:bg-orange-700 transition">
+                                Select
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                </div>
+                <div class="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <h4 class="font-semibold text-gray-800 mb-2">ℹ️ Fallback Logic</h4>
+                    <p class="text-sm text-gray-700">
+                        Used when AI is unavailable. Based on keyword matching and simple rules.
+                    </p>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function selectRole(role) {
+            alert(`Selected role: ${role}`);
+            console.log('Selected role:', role);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '<div class="text-gray-500 text-center py-8">Click "Test AI Suggestions" to see role recommendations</div>';
+        }
+
+        // Test cases
+        const testCases = {
+            'customer-service': {
+                currentPosition: "Customer Service Representative",
+                experienceSummary: "Led customer support team of 8 people. Handled customer inquiries, resolved complaints, and managed client relationships. Achieved 95% customer satisfaction rate.",
+                education: "Business Administration - University of Economics",
+                skills: "Customer Service, CRM, Communication, Problem Solving, Team Leadership"
+            },
+            'sales': {
+                currentPosition: "Sales Manager",
+                experienceSummary: "Managed sales team of 12 people. Exceeded sales targets by 120%. Developed new business relationships and expanded market presence.",
+                education: "Business Administration - University of Economics",
+                skills: "Sales, Account Management, Business Development, Negotiation, CRM"
+            },
+            'marketing': {
+                currentPosition: "Marketing Specialist",
+                experienceSummary: "Developed and executed marketing campaigns. Managed social media presence. Increased brand awareness by 40%.",
+                education: "Marketing - University of Economics",
+                skills: "Digital Marketing, Social Media, Campaign Management, Brand Strategy, Analytics"
+            },
+            'hr': {
+                currentPosition: "HR Specialist",
+                experienceSummary: "Managed recruitment process for 50+ positions. Conducted interviews and onboarding. Developed HR policies and procedures.",
+                education: "Human Resources - University of Economics",
+                skills: "Recruitment, Talent Acquisition, HR Policies, Interviewing, Employee Relations"
+            },
+            'operations': {
+                currentPosition: "Operations Manager",
+                experienceSummary: "Managed daily operations for 100+ employees. Improved efficiency by 25%. Coordinated cross-functional projects.",
+                education: "Business Administration - University of Economics",
+                skills: "Operations Management, Project Coordination, Process Improvement, Team Leadership"
+            },
+            'technical': {
+                currentPosition: "Software Engineer",
+                experienceSummary: "Developed web applications using React and Node.js. Implemented machine learning models. Led technical team of 5 developers.",
+                education: "Computer Science - University of Technology",
+                skills: "React, Node.js, Python, Machine Learning, AI, JavaScript"
+            }
+        };
+
+        function loadTestCase(type) {
+            const testCase = testCases[type];
+            if (testCase) {
+                document.getElementById('currentPosition').value = testCase.currentPosition;
+                document.getElementById('experienceSummary').value = testCase.experienceSummary;
+                document.getElementById('education').value = testCase.education;
+                document.getElementById('skills').value = testCase.skills;
+                
+                // Auto-test AI suggestions
+                setTimeout(() => {
+                    testRoleSuggestions();
+                }, 100);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html> 

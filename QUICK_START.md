@@ -1,52 +1,83 @@
-# 🚀 Hướng Dẫn Nhanh - Test Microphone
+# 🚀 Hướng Dẫn Nhanh - Microsoft Interview Pro
 
-## ✅ Live Server đang chạy!
+## ✅ Cách chạy ứng dụng đúng
 
-### 🔗 Truy cập ứng dụng:
+### 🔧 Phương pháp 1: Server với API Support (Khuyến nghị)
+
+```bash
+# Terminal 1: Chạy server với API
+npm run start-simple
+
+# Terminal 2: Chạy Live Server cho frontend
+npm run dev
 ```
-http://localhost:5555
+
+**Truy cập ứng dụng:**
+- Frontend: `http://localhost:5555`
+- API: `http://localhost:5556/api/openai`
+
+### 🔧 Phương pháp 2: HTTPS Server (Cho microphone)
+
+```bash
+# Cài đặt SSL certificates
+npm run setup
+
+# Chạy HTTPS server
+npm start
 ```
 
-### 🎤 Test Microphone:
+**Truy cập:** `https://localhost:5557`
 
-#### Bước 1: Mở ứng dụng
+### 🔧 Phương pháp 3: Chỉ Live Server (Không có API)
+
+```bash
+npm run dev
+```
+
+**Truy cập:** `http://localhost:5555`
+
+**Lưu ý:** Phương pháp này sẽ không có AI feedback vì Live Server không hỗ trợ API routes.
+
+## 🎤 Test Microphone:
+
+### Bước 1: Mở ứng dụng
 - Mở trình duyệt
-- Truy cập: `http://localhost:5555`
+- Truy cập: `http://localhost:5555` (Live Server) hoặc `https://localhost:5557` (HTTPS)
 - **Lưu ý**: Sử dụng `localhost` thay vì `127.0.0.1`
 
-#### Bước 2: Bắt đầu luyện tập
+### Bước 2: Test API
+- Nhấn nút "Test API" để kiểm tra kết nối Azure OpenAI
+- Đảm bảo server-simple.js đang chạy trên port 5556
+
+### Bước 3: Bắt đầu luyện tập
 - Nhấn "Bắt đầu luyện tập"
-- Chọn loại phỏng vấn (Job, Scholarship, Visa)
+- Import CV để có câu hỏi cá nhân hóa
+- Chọn loại phỏng vấn (Microsoft)
 - Nhấn "Bắt đầu ghi âm"
 
-#### Bước 3: Cấp quyền microphone
+### Bước 4: Cấp quyền microphone
 - Khi trình duyệt hỏi, chọn "Cho phép" hoặc "Allow"
 - Nếu không thấy popup, nhấp vào biểu tượng microphone trong thanh địa chỉ
 
-#### Bước 4: Test ghi âm
+### Bước 5: Test ghi âm
 - Nhấn nút microphone để bắt đầu ghi âm
 - Nói câu trả lời
 - Nhấn dừng để kết thúc
 - Xem feedback từ AI
 
-## 🔍 Nếu microphone không hoạt động:
+## 🔍 Nếu gặp vấn đề:
 
-### Thử các URL khác:
-```
-http://localhost:5555
-http://[::1]:5555
-```
+### Lỗi API 405 (Method Not Allowed)
+- **Nguyên nhân**: Live Server không hỗ trợ API routes
+- **Giải pháp**: Sử dụng phương pháp 1 (server-simple.js + Live Server)
 
-### Kiểm tra cài đặt:
-1. **Trình duyệt**: Chrome, Firefox, Edge
-2. **Microphone**: Kết nối và hoạt động
-3. **Quyền**: Cho phép microphone trong trình duyệt
+### Lỗi microphone "Requested device not found"
+- **Nguyên nhân**: Không có HTTPS hoặc localhost đặc biệt
+- **Giải pháp**: Sử dụng HTTPS server hoặc deploy
 
-### Deploy lên hosting (Khuyến nghị):
-```bash
-npm install -g vercel
-vercel
-```
+### Lỗi "Permission denied"
+- **Nguyên nhân**: Chưa cấp quyền microphone
+- **Giải pháp**: Nhấp vào biểu tượng microphone trong thanh địa chỉ và chọn "Cho phép"
 
 ## 📱 Test trên điện thoại:
 
@@ -62,6 +93,7 @@ vercel
 
 ## ✅ Kết quả mong đợi:
 
+- ✅ API hoạt động và có thể test
 - ✅ Microphone hoạt động
 - ✅ Có thể ghi âm
 - ✅ AI phân tích và đưa feedback
@@ -69,11 +101,12 @@ vercel
 
 ## 🆘 Nếu vẫn gặp vấn đề:
 
-1. **Deploy lên hosting**: Vercel, Netlify
-2. **Thử trình duyệt khác**: Chrome, Firefox, Edge
-3. **Kiểm tra microphone**: Test trong ứng dụng khác
-4. **Xem chi tiết**: `MICROPHONE_SETUP.md`
+1. **Kiểm tra server**: Đảm bảo cả Live Server và server-simple.js đang chạy
+2. **Kiểm tra API**: Nhấn "Test API" để kiểm tra kết nối
+3. **Deploy lên hosting**: Vercel, Netlify để test
+4. **Thử trình duyệt khác**: Chrome, Firefox, Edge
+5. **Xem chi tiết**: `MICROPHONE_SETUP.md`
 
 ---
 
-**Lưu ý**: Microphone là bắt buộc để có trải nghiệm tốt nhất. Chế độ nhập text chỉ dành cho trường hợp bất khả kháng. 
+**Lưu ý**: Để có trải nghiệm tốt nhất, sử dụng phương pháp 1 (server-simple.js + Live Server) hoặc deploy lên hosting. 

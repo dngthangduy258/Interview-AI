@@ -12,6 +12,61 @@ let currentLanguage = 'en'; // Current language: 'en' or 'vi'
 let interviewResults = []; // Store all feedback
 let interviewStartTime = null;
 let interviewEndTime = null;
+<<<<<<< Updated upstream
+=======
+let speechRecognition = null; // For real-time speech-to-text
+let isListening = false; // For real-time speech recognition
+let transcribedText = ''; // Store transcribed text
+let hasAnsweredCurrentQuestion = false; // Track if current question has been answered
+
+// Helper function to show errors
+function showError(message) {
+    console.error('Error:', message);
+    alert(message);
+}
+
+// Debug function to test file input
+function testFileInput() {
+    console.log('=== TESTING FILE INPUT ===');
+    const cvFileInput = document.getElementById('cvFile');
+    console.log('CV file input element:', cvFileInput);
+    
+    if (cvFileInput) {
+        console.log('File input found, triggering click...');
+        cvFileInput.click();
+    } else {
+        console.error('CV file input not found!');
+    }
+}
+
+// Global file input test function
+function testFileInputDirectly() {
+    console.log('=== DIRECT FILE INPUT TEST ===');
+    const cvFileInput = document.getElementById('cvFile');
+    
+    if (cvFileInput) {
+        // Create a test file
+        const testFile = new File(['Test CV content'], 'test-cv.txt', { type: 'text/plain' });
+        
+        // Create a new FileList-like object
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(testFile);
+        
+        // Set the files
+        cvFileInput.files = dataTransfer.files;
+        
+        console.log('Test file set:', cvFileInput.files[0]);
+        
+        // Trigger change event manually
+        const changeEvent = new Event('change', { bubbles: true });
+        cvFileInput.dispatchEvent(changeEvent);
+        
+        console.log('Change event dispatched manually');
+    } else {
+        console.error('CV file input not found for direct test!');
+    }
+}
+>>>>>>> Stashed changes
 
 // Make functions globally available
 window.startPractice = function() {
@@ -183,11 +238,283 @@ async function analyzeCV() {
         return;
     }
     
+<<<<<<< Updated upstream
     // Show loading
     analysisResult.innerHTML = '<div class="flex items-center"><div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>Đang phân tích CV...</div>';
     
     try {
         // Read file content
+=======
+    if (cvPreview) cvPreview.classList.remove('hidden');
+    feather.replace();
+    
+    // Auto-start analysis with progress bar
+    startCVAnalysis(file);
+
+    // Check file type and process accordingly
+    const fileType = file.type.toLowerCase();
+    const fileName = file.name.toLowerCase();
+
+    console.log('Processing file type:', fileType, 'File name:', fileName);
+
+    if (fileType.includes('image') || fileName.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/)) {
+        console.log('Processing as image file');
+        processImageFile(file);
+    } else if (fileType.includes('pdf') || fileName.endsWith('.pdf')) {
+        console.log('Processing as PDF file');
+        processPDFFile(file);
+    } else if (fileType.includes('text') || fileName.match(/\.(txt|doc|docx)$/)) {
+        console.log('Processing as text file');
+        processTextFile(file);
+    } else {
+        console.log('Unsupported file type');
+        showError('Định dạng file không được hỗ trợ. Vui lòng chọn file PDF, hình ảnh, hoặc text.');
+    }
+}
+
+// Start CV analysis with progress bar
+async function startCVAnalysis(file) {
+    try {
+        console.log('Starting CV analysis with progress...');
+        
+        // Show progress bar
+        const cvAnalysis = document.getElementById('cvAnalysis');
+        const analysisResult = document.getElementById('analysisResult');
+        
+        if (cvAnalysis) {
+            cvAnalysis.classList.remove('hidden');
+            analysisResult.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-blue-800">Analyzing CV...</span>
+                        <span id="analysisProgress" class="text-sm text-blue-600">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="analysisProgressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div class="text-xs text-blue-600">
+                        <i data-feather="loader" class="w-4 h-4 inline mr-1 animate-spin"></i>
+                        Processing file and extracting information...
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Simulate progress updates
+        const progressBar = document.getElementById('analysisProgressBar');
+        const progressText = document.getElementById('analysisProgress');
+        
+        const updateProgress = (percent) => {
+            if (progressBar) progressBar.style.width = `${percent}%`;
+            if (progressText) progressText.textContent = `${percent}%`;
+        };
+        
+        // Progress simulation
+        updateProgress(10);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        updateProgress(30);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        updateProgress(60);
+        await new Promise(resolve => setTimeout(resolve, 600));
+        
+        updateProgress(80);
+        await new Promise(resolve => setTimeout(resolve, 400));
+        
+        updateProgress(100);
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Complete analysis
+        if (analysisResult) {
+            analysisResult.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <i data-feather="check-circle" class="text-green-600 w-5 h-5 mr-2"></i>
+                        <span class="font-medium text-green-800">Analysis Complete!</span>
+                    </div>
+                    <p class="text-sm text-green-700">CV has been successfully analyzed. Ready to start interview.</p>
+                </div>
+            `;
+        }
+        
+        // Show start interview button
+        const startInterviewBtn = document.getElementById('startInterview');
+        if (startInterviewBtn) {
+            startInterviewBtn.classList.remove('hidden');
+        }
+        
+        // Add option to import different CV
+        const cvUploadSection = document.getElementById('cvUpload');
+        if (cvUploadSection) {
+            const importNewBtn = document.createElement('button');
+            importNewBtn.className = 'mt-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition text-sm';
+            importNewBtn.innerHTML = '<i data-feather="refresh-cw" class="w-4 h-4 inline mr-1"></i>Import Different CV';
+            importNewBtn.onclick = () => {
+                document.getElementById('cvFile').value = '';
+                document.getElementById('cvPreview').classList.add('hidden');
+                document.getElementById('cvAnalysis').classList.add('hidden');
+                document.getElementById('startInterview').classList.add('hidden');
+                if (importNewBtn.parentNode) {
+                    importNewBtn.parentNode.removeChild(importNewBtn);
+                }
+            };
+            
+            const buttonContainer = cvUploadSection.querySelector('.text-center');
+            if (buttonContainer) {
+                buttonContainer.appendChild(importNewBtn);
+            }
+        }
+        
+        feather.replace();
+        
+        // Process the file based on type
+        const fileType = file.type.toLowerCase();
+        const fileName = file.name.toLowerCase();
+        
+        if (fileType.includes('image') || fileName.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/)) {
+            await processImageFile(file);
+        } else if (fileType.includes('pdf') || fileName.endsWith('.pdf')) {
+            await processPDFFile(file);
+        } else if (fileType.includes('text') || fileName.match(/\.(txt|doc|docx)$/)) {
+            await processTextFile(file);
+        } else {
+            showError('Định dạng file không được hỗ trợ. Vui lòng chọn file PDF, hình ảnh, hoặc text.');
+        }
+        
+    } catch (error) {
+        console.error('Error in CV analysis:', error);
+        showError('Có lỗi xảy ra khi phân tích CV. Vui lòng thử lại.');
+    }
+}
+
+// Process image file using OCR
+async function processImageFile(file) {
+    try {
+        console.log('Processing image file:', file.name);
+        
+        // For image files, we'll show a helpful message since Azure OpenAI doesn't support image_url
+        // Users should convert images to text or use text-based CVs
+        const fallbackText = `Image file detected: ${file.name}
+
+Since this is an image file, the AI analysis will be limited. For better results, please:
+
+1. Convert your image to text format (.txt)
+2. Copy and paste the text content from the image
+3. Use a text-based CV format
+4. Or manually type your CV information
+
+Alternatively, you can continue with the interview practice without CV analysis.`;
+        
+        await analyzeCVWithAI(fallbackText);
+        
+    } catch (error) {
+        console.error('Error processing image:', error);
+        showError('Không thể xử lý file hình ảnh. Vui lòng chuyển đổi sang định dạng text hoặc sử dụng file khác.');
+    }
+}
+
+// Process PDF file with OCR support
+async function processPDFFile(file) {
+    try {
+        console.log('Processing PDF file:', file.name);
+        
+        // Check if Tesseract.js is available
+        if (typeof Tesseract !== 'undefined') {
+            console.log('Using OCR for PDF processing');
+            const extractedText = await processPDFWithOCR(file);
+            await analyzeCVWithAI(extractedText);
+        } else {
+            // Fallback to original method
+            const text = await readFileAsText(file);
+            
+            if (text.startsWith('%PDF')) {
+                console.log('Binary PDF detected, showing fallback message');
+                const fallbackText = `PDF file detected: ${file.name}
+
+Since this is a PDF file, the AI analysis will be limited. For better results, please:
+
+1. Convert your PDF to text format (.txt)
+2. Copy and paste the text content
+3. Use a text-based CV format
+4. Or use the OCR-enabled version of this application
+
+Alternatively, you can continue with the interview practice without CV analysis.`;
+                
+                await analyzeCVWithAI(fallbackText);
+            } else {
+                console.log('PDF content appears to be text-based');
+                await analyzeCVWithAI(text);
+            }
+        }
+    } catch (error) {
+        console.error('Error processing PDF:', error);
+        showError('Không thể xử lý file PDF. Vui lòng chuyển đổi sang định dạng text hoặc sử dụng file khác.');
+    }
+}
+
+// Process PDF with OCR using Tesseract.js
+async function processPDFWithOCR(file) {
+    try {
+        console.log('Starting OCR processing for PDF:', file.name);
+        
+        // Check if PDF.js is available
+        if (typeof pdfjsLib === 'undefined') {
+            throw new Error('PDF.js library not loaded. Please include PDF.js for OCR processing.');
+        }
+        
+        // Initialize PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        
+        let fullText = '';
+        const totalPages = pdf.numPages;
+        
+        console.log(`Processing ${totalPages} pages with OCR`);
+        
+        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+            console.log(`Processing page ${pageNum}/${totalPages}`);
+            
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 2.0 });
+            
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            await page.render({ canvasContext: context, viewport }).promise;
+            
+            console.log(`Running OCR on page ${pageNum}`);
+            
+            const { data: { text } } = await Tesseract.recognize(canvas, 'eng+vie', {
+                logger: m => {
+                    if (m.status === 'recognizing text') {
+                        console.log(`OCR Progress: ${Math.round(m.progress * 100)}%`);
+                    }
+                }
+            });
+            
+            fullText += `\n\n--- PAGE ${pageNum} ---\n\n${text}`;
+            console.log(`Page ${pageNum} OCR completed, extracted ${text.length} characters`);
+        }
+        
+        console.log('OCR processing completed, total text length:', fullText.length);
+        return fullText;
+        
+    } catch (error) {
+        console.error('OCR processing error:', error);
+        throw new Error(`OCR processing failed: ${error.message}`);
+    }
+}
+
+// Process text file
+async function processTextFile(file) {
+    try {
+        console.log('Starting text file processing for:', file.name);
+>>>>>>> Stashed changes
         const text = await readFileAsText(file);
         
         // Check if it's a PDF warning
@@ -275,18 +602,24 @@ async function readFileAsText(file) {
 async function analyzeCVWithAI(cvText) {
     try {
         const response = await callAzureOpenAI(`
-            Analyze this CV and return information in JSON format:
-            
-            CV: ${cvText}
-            
-            Return JSON with these fields:
-            - basicInfo: Basic information (name, age, current position)
-            - experience: Work experience (summary)
-            - education: Education background
-            - skills: Main skills
-            - recommendedPosition: Suitable position at Microsoft
-            
-            Return only JSON, no other text.
+            You're an AI assistant helping to extract and structure CV data.
+
+            Below is a CV file input. If it's in PDF format and contains readable text, analyze it as usual. If the content is scanned or unreadable, clearly explain the problem, and return an empty JSON template with error guidance.
+
+            CV content:
+            ${cvText}
+
+            Please return a valid JSON response in this format:
+            {
+              "basicInfo": { "name": "", "age": "", "currentPosition": "" },
+              "experience": "Summary of work experience",
+              "education": "Education background",
+              "skills": ["skill1", "skill2"],
+              "recommendedPosition": "Most suitable job role",
+              "note": "Any issues found with the CV (e.g., unreadable scanned file)"
+            }
+
+            Only return the JSON. No extra explanation.
         `);
         
         console.log('CV analysis response:', response);
@@ -294,7 +627,131 @@ async function analyzeCVWithAI(cvText) {
         // Try to parse JSON from response
         const jsonMatch = response.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
+<<<<<<< Updated upstream
             return JSON.parse(jsonMatch[0]);
+=======
+            const analysis = JSON.parse(jsonMatch[0]);
+            console.log('Parsed CV analysis:', analysis);
+            
+            // Store CV data for interview with normalized structure
+            cvData = {
+                basicInfo: analysis.basicInfo,
+                experience: analysis.experience,
+                education: analysis.education,
+                skills: (() => {
+                    // Normalize skills to array format
+                    if (Array.isArray(analysis.skills)) {
+                        return analysis.skills;
+                    } else if (analysis.skills && analysis.skills.mainSkills) {
+                        const allSkills = [];
+                        Object.values(analysis.skills.mainSkills).forEach(category => {
+                            if (Array.isArray(category)) {
+                                allSkills.push(...category);
+                            }
+                        });
+                        return allSkills;
+                    } else {
+                        return [];
+                    }
+                })(),
+                recommendedPosition: analysis.recommendedPosition
+            };
+            
+            // Display analysis with better formatting
+            const analysisResult = document.getElementById('analysisResult');
+            const startInterviewBtn = document.getElementById('startInterview');
+            const cvAnalysis = document.getElementById('cvAnalysis');
+            
+            if (analysisResult) {
+                // Generate position suggestions based on CV
+                const suggestedPositions = await suggestJobTitlesFromCV(analysis);
+                
+                analysisResult.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-4">
+                        <div class="flex items-center mb-4">
+                            <i data-feather="check-circle" class="text-green-600 w-6 h-6 mr-2"></i>
+                            <h4 class="text-lg font-semibold text-green-800">✅ CV đã được phân tích thành công!</h4>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h6 class="font-semibold text-gray-800 mb-2">📋 Thông tin cơ bản:</h6>
+                            <p class="text-sm text-gray-600">${analysis.basicInfo?.name || 'N/A'} - ${analysis.basicInfo?.currentPosition || 'N/A'}</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h6 class="font-semibold text-gray-800 mb-2">💼 Kinh nghiệm:</h6>
+                            <p class="text-sm text-gray-600">${analysis.experience?.summary || analysis.experience || 'N/A'}</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h6 class="font-semibold text-gray-800 mb-2">🎓 Học vấn:</h6>
+                            <p class="text-sm text-gray-600">${analysis.education?.background || analysis.education || 'N/A'}</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h6 class="font-semibold text-gray-800 mb-2">🔧 Kỹ năng chính:</h6>
+                            <div class="flex flex-wrap gap-2">
+                                ${(() => {
+                                    // Handle different skills formats
+                                    if (Array.isArray(analysis.skills)) {
+                                        return analysis.skills.map(skill => 
+                                            `<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">${skill}</span>`
+                                        ).join('');
+                                    } else if (analysis.skills && analysis.skills.mainSkills) {
+                                        // Handle nested skills structure
+                                        const allSkills = [];
+                                        Object.values(analysis.skills.mainSkills).forEach(category => {
+                                            if (Array.isArray(category)) {
+                                                allSkills.push(...category);
+                                            }
+                                        });
+                                        return allSkills.map(skill => 
+                                            `<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">${skill}</span>`
+                                        ).join('');
+                                    } else {
+                                        return '<span class="text-gray-500">Kỹ năng không có sẵn</span>';
+                                    }
+                                })()}
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h6 class="font-semibold text-blue-800 mb-2">🎯 Vị trí phù hợp tại Microsoft:</h6>
+                            <div class="space-y-3">
+                                <p class="text-sm text-blue-700 font-medium">${analysis.recommendedPosition || 'Software Engineer'}</p>
+                                <div class="mt-3">
+                                    <h7 class="font-medium text-blue-800 mb-2 block">💡 Gợi ý vị trí khác:</h7>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${suggestedPositions.map(position => 
+                                            `<button onclick="selectPosition('${position}')" class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded hover:bg-blue-200 transition">${position}</button>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <label class="block text-sm font-medium text-blue-800 mb-2">Hoặc nhập vị trí tùy chỉnh:</label>
+                                    <div class="flex space-x-2">
+                                        <input type="text" id="customPosition" placeholder="Ví dụ: Product Manager, Data Scientist..." class="flex-1 text-sm p-2 border border-blue-200 rounded">
+                                        <button onclick="selectCustomPosition()" class="bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 transition">Chọn</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Show analysis and start interview button
+            if (cvAnalysis) cvAnalysis.classList.remove('hidden');
+            if (startInterviewBtn) {
+                startInterviewBtn.classList.remove('hidden');
+                startInterviewBtn.innerHTML = `
+                    <i data-feather="play" class="w-5 h-5 mr-2"></i>
+                    Bắt đầu phỏng vấn với CV đã phân tích
+                `;
+            }
+            
+            // Show success message
+            showSuccessMessage('CV đã được phân tích thành công! Bạn có thể bắt đầu phỏng vấn.');
+            
+            return analysis;
+>>>>>>> Stashed changes
         } else {
             throw new Error('No JSON found in response');
         }
@@ -689,6 +1146,7 @@ async function generateFeedback(answer) {
     const currentQuestion = microsoftQuestions[currentQuestionIndex];
     
     try {
+<<<<<<< Updated upstream
         const feedback = await callAzureOpenAI(`
             You are a Microsoft recruiter. Evaluate the candidate's answer to this interview question.
             
@@ -715,6 +1173,118 @@ async function generateFeedback(answer) {
             timestamp: Date.now()
         };
         interviewResults.push(result);
+=======
+        console.log('Generating feedback for answer:', answer.substring(0, 100) + '...');
+        
+        const response = await callAzureOpenAI(`
+You're a senior recruiter at Meta (Facebook), conducting mock interview evaluations.
+
+You will be given:
+- An interview question (as asked to the candidate)
+- The candidate's response (typed or transcribed)
+- The role: ${cvData?.recommendedPosition || 'Software Engineer'}
+
+Your job:
+1. **Evaluate the quality of the candidate's answer**.
+2. **Judge if the response is structured (e.g., uses STAR or logical format)**.
+3. **Assess English fluency, vocabulary, and grammar**.
+4. **Assess technical/behavioral depth relevant to the role**.
+5. **Evaluate confidence and clarity (even if answer is short)**.
+
+Return structured feedback in this JSON format:
+
+{
+  "question": "The original question here...",
+  "answer": "The candidate's response here...",
+  "score": 7.5,             // From 0 to 10
+  "level": "Average",       // One of: Poor, Below Average, Average, Good, Excellent
+  "feedback": "Detailed recruiter-style feedback here...",
+  "tips": "Specific improvement advice for the candidate"
+}
+
+Rules:
+- Be critical but fair.
+- Be specific. No generic advice.
+- Help the candidate improve.
+- Write like a Meta recruiter, not a language teacher.
+- If the answer is very short or off-topic, say so clearly.
+- Feedback should be constructive, professional, and helpful.
+- Output only the JSON.
+
+Question: ${questions[currentQuestionIndex] || 'Tell me about yourself.'}
+Answer: ${answer}
+Role: ${cvData?.recommendedPosition || 'Software Engineer'}
+        `);
+        
+        console.log('Feedback response received');
+        
+        // Parse JSON response
+        let feedbackData;
+        try {
+            const jsonMatch = response.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                feedbackData = JSON.parse(jsonMatch[0]);
+                console.log('Parsed feedback data:', feedbackData);
+            } else {
+                throw new Error('No JSON found in response');
+            }
+        } catch (error) {
+            console.error('Error parsing feedback JSON:', error);
+            // Use fallback feedback
+            feedbackData = {
+                score: 7.0,
+                level: "Average",
+                feedback: "Unable to parse AI feedback. Using fallback evaluation.",
+                tips: "Please ensure your answer is structured and specific to the question."
+            };
+        }
+        
+        // Generate HTML feedback from JSON data
+        const feedbackHtml = generateFeedbackHTML(feedbackData);
+        
+        // Display feedback
+        const feedbackArea = document.getElementById('feedbackArea');
+        const feedbackContentElement = document.getElementById('feedbackContent');
+        
+        if (feedbackArea) {
+            feedbackArea.innerHTML = feedbackHtml;
+            feedbackArea.classList.remove('hidden');
+        }
+        
+        if (feedbackContentElement) {
+            feedbackContentElement.innerHTML = feedbackHtml;
+            feedbackContentElement.classList.remove('hidden');
+        }
+        
+        console.log('Feedback HTML generated:', feedbackHtml);
+        
+        // Store feedback for final report
+        // Mark question as answered
+        hasAnsweredCurrentQuestion = true;
+        
+        interviewResults.push({
+            question: questions[currentQuestionIndex],
+            answer: answer,
+            feedback: feedbackData,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Show next question button
+        const nextBtn = document.getElementById('nextQuestion');
+        if (nextBtn) {
+            nextBtn.classList.remove('hidden');
+            nextBtn.innerHTML = `
+                <i data-feather="arrow-right" class="w-5 h-5 mr-2"></i>
+                Câu hỏi tiếp theo
+            `;
+        }
+        
+        // Update progress
+        updateInterviewProgress();
+        
+        // Return the response for use in processRecording
+        return feedbackData;
+>>>>>>> Stashed changes
         
         return feedback;
     } catch (error) {
@@ -748,12 +1318,108 @@ async function generateFeedback(answer) {
         };
         interviewResults.push(result);
         
+<<<<<<< Updated upstream
         return fallbackFeedback;
+=======
+        // Show next question button
+        const nextBtn = document.getElementById('nextQuestion');
+        if (nextBtn) {
+            nextBtn.classList.remove('hidden');
+            nextBtn.innerHTML = `
+                <i data-feather="arrow-right" class="w-5 h-5 mr-2"></i>
+                Câu hỏi tiếp theo
+            `;
+        }
+        
+        updateInterviewProgress();
+    }
+}
+
+// Generate HTML feedback from JSON data
+function generateFeedbackHTML(feedbackData) {
+    const { score, level, feedback, tips } = feedbackData;
+    
+    // Get color and icon based on level
+    const getLevelStyle = (level) => {
+        switch(level.toLowerCase()) {
+            case 'excellent':
+                return { color: 'green', icon: '🏆', bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800' };
+            case 'good':
+                return { color: 'blue', icon: '👍', bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800' };
+            case 'average':
+                return { color: 'yellow', icon: '⚠️', bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800' };
+            case 'below average':
+                return { color: 'orange', icon: '📉', bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-800' };
+            case 'poor':
+                return { color: 'red', icon: '❌', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800' };
+            default:
+                return { color: 'gray', icon: '📊', bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-800' };
+        }
+    };
+    
+    const levelStyle = getLevelStyle(level);
+    const scorePercentage = Math.round(score * 10);
+    
+    return `
+        <div class="feedback-container bg-white border border-gray-200 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">🎯 Meta Recruiter Feedback</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-green-800 mb-2">📊 Overall Score</h4>
+                    <p class="text-2xl font-bold text-green-600">${score}/10</p>
+                    <p class="text-sm text-green-600">(${scorePercentage}%)</p>
+                </div>
+                <div class="${levelStyle.bg} border ${levelStyle.border} rounded-lg p-4">
+                    <h4 class="font-semibold ${levelStyle.text} mb-2">${levelStyle.icon} Performance Level</h4>
+                    <p class="text-lg font-medium ${levelStyle.text}">${level}</p>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">💬 Recruiter Feedback</h4>
+                    <p class="text-sm text-gray-600">${feedback}</p>
+                </div>
+                
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">💡 Improvement Tips</h4>
+                    <p class="text-sm text-gray-600">${tips}</p>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <p class="text-sm text-gray-600">
+                    <strong>Note:</strong> This feedback is provided by Meta's AI recruiter simulation. 
+                    For real interview preparation, consider working with professional career coaches.
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+// Update interview progress
+function updateInterviewProgress() {
+    const progressBar = document.getElementById('interviewProgress');
+    const progressText = document.getElementById('progressText');
+    
+    if (progressBar && progressText) {
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        progressBar.style.width = progress + '%';
+        progressText.textContent = `Câu ${currentQuestionIndex + 1} / ${questions.length}`;
+>>>>>>> Stashed changes
     }
 }
 
 function nextQuestion() {
+    // Only allow next if user has answered current question
+    if (!hasAnsweredCurrentQuestion) {
+        showWarningMessage('Vui lòng trả lời câu hỏi hiện tại trước khi chuyển sang câu tiếp theo.');
+        return;
+    }
+    
     currentQuestionIndex++;
+    hasAnsweredCurrentQuestion = false; // Reset for new question
     
     const questionArray = questions || microsoftQuestions;
     
@@ -1132,13 +1798,16 @@ async function processManualAnswer(answer) {
         const feedback = await generateFeedback(answer);
         feedbackContent.innerHTML = feedback;
         
+        // Mark question as answered
+        hasAnsweredCurrentQuestion = true;
+        
         // Clear text input
         document.getElementById('manualAnswer').value = '';
         
-        // Move to next question after delay
-        setTimeout(() => {
-            nextQuestion();
-        }, 5000);
+        // Don't auto-move to next question, let user choose
+        // setTimeout(() => {
+        //     nextQuestion();
+        // }, 5000);
         
     } catch (error) {
         console.error('Error processing manual answer:', error);
@@ -1508,8 +2177,24 @@ async function callAzureOpenAI(prompt) {
     try {
         console.log('Calling Azure OpenAI with prompt:', prompt);
         
-        // Use Vercel API route instead of direct Azure call
-        const response = await fetch('/api/openai', {
+        // Determine the correct API endpoint based on current server
+        const currentPort = window.location.port;
+        let apiEndpoint;
+        
+        if (currentPort === '5555') {
+            // Using Live Server, need to use server-simple.js
+            apiEndpoint = 'http://localhost:5556/api/openai';
+        } else if (currentPort === '5556') {
+            // Using server-simple.js directly
+            apiEndpoint = '/api/openai';
+        } else {
+            // Default to server-simple.js
+            apiEndpoint = 'http://localhost:5556/api/openai';
+        }
+        
+        console.log('Using API endpoint:', apiEndpoint);
+        
+        const response = await fetch(apiEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1537,4 +2222,611 @@ async function callAzureOpenAI(prompt) {
         console.error('Azure OpenAI API error:', error);
         throw error;
     }
+<<<<<<< Updated upstream
+=======
+}
+
+// Analyze CV function (called from HTML)
+async function analyzeCV() {
+    const fileInput = document.getElementById('cvFile');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Vui lòng chọn file CV trước');
+        return;
+    }
+    
+    console.log('Analyze CV called for file:', file.name);
+    
+    // Show loading
+    const analysisResult = document.getElementById('analysisResult');
+    if (analysisResult) {
+        analysisResult.innerHTML = '<div class="flex items-center"><div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>Đang phân tích CV...</div>';
+    }
+    
+    try {
+        // Check file type and process accordingly
+        const fileType = file.type.toLowerCase();
+        const fileName = file.name.toLowerCase();
+
+        console.log('Analyzing file type:', fileType, 'File name:', fileName);
+
+        if (fileType.includes('image') || fileName.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/)) {
+            console.log('Processing as image file');
+            await processImageFile(file);
+        } else if (fileType.includes('pdf') || fileName.endsWith('.pdf')) {
+            console.log('Processing as PDF file');
+            await processPDFFile(file);
+        } else if (fileType.includes('text') || fileName.match(/\.(txt|doc|docx)$/)) {
+            console.log('Processing as text file');
+            await processTextFile(file);
+        } else {
+            console.log('Unsupported file type');
+            showError('Định dạng file không được hỗ trợ. Vui lòng chọn file PDF, hình ảnh, hoặc text.');
+        }
+    } catch (error) {
+        console.error('CV analysis error:', error);
+        if (analysisResult) {
+            analysisResult.innerHTML = '<div class="text-red-600">❌ Lỗi phân tích CV. Vui lòng thử lại.</div>';
+        }
+    }
+}
+
+// Start interview with CV
+function startInterviewWithCV() {
+    console.log('Start interview with CV called');
+    if (!cvData) {
+        const message = currentLanguage === 'en' 
+            ? 'Please analyze CV first'
+            : 'Vui lòng phân tích CV trước';
+        alert(message);
+        return;
+    }
+    
+    // Generate personalized questions based on CV
+    generatePersonalizedQuestions(cvData).then(personalizedQuestions => {
+        questions = personalizedQuestions;
+        startPractice();
+    });
+}
+
+// Generate personalized questions based on CV data
+async function generatePersonalizedQuestions(cvData) {
+    try {
+        console.log('Generating personalized questions for CV:', cvData);
+        
+        const prompt = `
+You're an AI recruiter at Microsoft. Based on the candidate's CV, generate a list of 15 high-quality interview questions that match Microsoft's real-world interview style.
+
+The questions should cover:
+1. Behavioral questions (using STAR format)
+2. Technical questions related to the candidate's experience and skills
+3. Role-specific problem-solving or system design
+4. Culture fit and Microsoft leadership principles
+5. Career motivations, goals, and growth mindset
+
+Return in this format:
+{
+  "language": "en",
+  "questions": [
+    {"en": "Question in English", "vi": "Translated question in Vietnamese"},
+    ...
+  ]
+}
+
+CV Summary:
+- Name: ${cvData.basicInfo?.name || 'Candidate'}
+- Position Applied: ${cvData.recommendedPosition || 'Software Engineer'}
+- Current Role: ${cvData.basicInfo?.currentPosition || 'Software Developer'}
+- Experience Summary: ${cvData.experience?.summary || 'Worked on multiple web applications'}
+- Education: ${cvData.education?.university || 'University'} - ${cvData.education?.major || 'Computer Science'}
+- Skills: ${JSON.stringify(cvData.skills || ['React', 'Node.js', 'Azure'])}
+
+IMPORTANT: The candidate is applying for the position of "${cvData.recommendedPosition || 'Software Engineer'}". 
+Please generate questions that are specifically tailored for this role, including:
+- Role-specific technical questions
+- Behavioral questions relevant to this position
+- Industry-specific scenarios
+- Microsoft culture questions appropriate for this role
+
+Make sure:
+- Each question is clearly written and relevant to the candidate's background
+- Questions are realistic and could be used in a Microsoft interview
+- Translate each question to Vietnamese (field: vi)
+- Focus on the specific role and skills mentioned in the CV
+- Include both technical and behavioral questions appropriate for the position
+
+Return **only the JSON**, no explanation or notes.
+`;
+        
+        const response = await callAzureOpenAI(prompt);
+        console.log('Personalized questions response:', response);
+        
+        // Parse JSON from response
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            const data = JSON.parse(jsonMatch[0]);
+            console.log('Parsed questions data:', data);
+            
+            // Extract questions based on current language
+            let questions = [];
+            if (data.questions && Array.isArray(data.questions)) {
+                questions = data.questions.map(q => {
+                    // Return question in current language, fallback to English
+                    if (currentLanguage === 'vi' && q.vi) {
+                        return q.vi;
+                    } else if (q.en) {
+                        return q.en;
+                    } else {
+                        // Fallback to English if translation not available
+                        return q.en || q.vi || 'Question not available';
+                    }
+                });
+            }
+            
+            console.log('Processed questions:', questions);
+            console.log('Number of questions:', questions.length);
+            return questions;
+        } else {
+            console.error('No JSON object found in response. Response:', response);
+            throw new Error('No JSON object found in response');
+        }
+    } catch (error) {
+        console.error('Error generating personalized questions:', error);
+        // Fallback to default questions
+        return microsoftQuestions;
+    }
+}
+
+// Show CV upload function
+function showCVUpload() {
+    console.log('showCVUpload called');
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('cvUpload').classList.remove('hidden');
+    document.getElementById('practice').classList.add('hidden');
+    document.getElementById('booking').classList.add('hidden');
+}
+
+// Start practice function
+function startPractice() {
+    console.log('startPractice called');
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('cvUpload').classList.add('hidden');
+    document.getElementById('practice').classList.remove('hidden');
+    document.getElementById('booking').classList.add('hidden');
+    
+    currentQuestionIndex = 0;
+    // Reset questions to default if no personalized questions
+    if (!questions) {
+        questions = microsoftQuestions;
+    }
+    startTimer();
+    displayCurrentQuestion();
+}
+
+// Display current question with TTS
+function displayCurrentQuestion() {
+    console.log('displayCurrentQuestion called');
+    console.log('currentQuestionIndex:', currentQuestionIndex);
+    console.log('questions:', questions);
+    console.log('microsoftQuestions:', microsoftQuestions);
+    
+    // Reset answered status for new question
+    hasAnsweredCurrentQuestion = false;
+    
+    const questionText = document.getElementById('currentQuestionText');
+    const currentQuestion = document.getElementById('currentQuestion');
+    const totalQuestions = document.getElementById('totalQuestions');
+    const progressBar = document.getElementById('progressBar');
+    const questionStatus = document.getElementById('questionStatus');
+    
+    // Use personalized questions if available, otherwise fallback to default
+    const questionArray = questions || microsoftQuestions;
+    console.log('questionArray:', questionArray);
+    console.log('questionArray length:', questionArray.length);
+    
+    let question = questionArray[currentQuestionIndex];
+    console.log('Current question:', question);
+    
+    if (cvData) {
+        // Personalize question based on CV data
+        question = personalizeQuestion(question, cvData);
+    }
+    
+    if (questionText) {
+        questionText.textContent = question;
+        questionText.classList.add('hidden'); // Hide text by default
+    }
+    if (currentQuestion) currentQuestion.textContent = currentQuestionIndex + 1;
+    if (totalQuestions) totalQuestions.textContent = questionArray.length;
+    
+    if (progressBar) {
+        const progress = ((currentQuestionIndex + 1) / questionArray.length) * 100;
+        progressBar.style.width = progress + '%';
+    }
+    
+    // Auto-speak the question after a short delay
+    setTimeout(() => {
+        speakQuestion(question);
+    }, 500);
+    
+    // Update navigation buttons
+    updateNavigationButtons();
+}
+
+// Personalize question based on CV data
+function personalizeQuestion(question, cvData) {
+    // Personalize questions based on CV data
+    if (question.includes("Tell me about yourself") || question.includes("Hãy kể về bản thân")) {
+        return currentLanguage === 'vi' 
+            ? `Hãy kể về bản thân và kinh nghiệm của bạn trong lĩnh vực ${cvData.recommendedPosition}.`
+            : `Tell me about yourself and your background in ${cvData.recommendedPosition}.`;
+    } else if (question.includes("Why do you want to work at Microsoft") || question.includes("Tại sao bạn muốn làm việc tại Microsoft")) {
+        return currentLanguage === 'vi'
+            ? `Tại sao bạn muốn làm việc tại Microsoft với vai trò ${cvData.recommendedPosition}?`
+            : `Why do you want to work at Microsoft as a ${cvData.recommendedPosition}?`;
+    } else if (question.includes("Describe a challenging project") || question.includes("Mô tả một dự án thách thức")) {
+        const firstSkill = Array.isArray(cvData.skills) ? cvData.skills[0] : cvData.skills?.split(',')[0] || 'technology';
+        return currentLanguage === 'vi'
+            ? `Mô tả một dự án thách thức bạn đã làm việc với ${firstSkill} và cách bạn vượt qua khó khăn.`
+            : `Describe a challenging project you worked on using ${firstSkill} and how you overcame obstacles.`;
+    }
+    return question;
+}
+
+// Helper function to show success messages
+function showSuccessMessage(message) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    successDiv.innerHTML = `
+        <div class="flex items-center">
+            <i data-feather="check-circle" class="w-5 h-5 mr-2"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(successDiv);
+    feather.replace();
+    
+    setTimeout(() => {
+        successDiv.remove();
+    }, 5000);
+}
+
+// Helper function to show warning messages
+function showWarningMessage(message) {
+    const warningDiv = document.createElement('div');
+    warningDiv.className = 'fixed top-4 right-4 bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    warningDiv.innerHTML = `
+        <div class="flex items-center">
+            <i data-feather="alert-triangle" class="w-5 h-5 mr-2"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(warningDiv);
+    feather.replace();
+    
+    setTimeout(() => {
+        warningDiv.remove();
+    }, 5000);
+}
+
+// Function to show text input mode
+function showTextInput() {
+    const recordingSection = document.querySelector('.recording-section');
+    const textInputMode = document.getElementById('textInputMode');
+    
+    if (recordingSection) {
+        recordingSection.classList.add('hidden');
+    }
+    
+    if (textInputMode) {
+        textInputMode.classList.remove('hidden');
+    }
+}
+
+// Text-to-Speech Functions
+function speakQuestion(questionText) {
+    try {
+        // Stop any current speech
+        speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(questionText);
+        utterance.lang = currentLanguage === 'en' ? 'en-US' : 'vi-VN';
+        utterance.rate = 0.9; // Slightly slower for clarity
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        // Update UI to show speaking status
+        updateSpeakingStatus(true);
+        
+        utterance.onend = () => {
+            updateSpeakingStatus(false);
+        };
+        
+        utterance.onerror = (event) => {
+            console.error('Speech synthesis error:', event);
+            updateSpeakingStatus(false);
+            showWarningMessage('Speech synthesis failed. Please use text mode.');
+        };
+        
+        speechSynthesis.speak(utterance);
+        
+    } catch (error) {
+        console.error('Speech synthesis error:', error);
+        updateSpeakingStatus(false);
+        showWarningMessage('Speech synthesis not supported. Please use text mode.');
+    }
+}
+
+function speakCurrentQuestion() {
+    const questionText = document.getElementById('currentQuestionText');
+    if (questionText && questionText.textContent) {
+        speakQuestion(questionText.textContent);
+    }
+}
+
+function toggleQuestionText() {
+    const questionText = document.getElementById('currentQuestionText');
+    const questionStatus = document.getElementById('questionStatus');
+    const toggleButton = document.getElementById('toggleTextButton');
+    
+    if (questionText && questionStatus) {
+        const isHidden = questionText.classList.contains('hidden');
+        
+        if (isHidden) {
+            // Show text
+            questionText.classList.remove('hidden');
+            questionStatus.classList.add('hidden');
+            toggleButton.innerHTML = '<i data-feather="eye-off" class="w-4 h-4 inline mr-1"></i>Hide Text';
+        } else {
+            // Hide text
+            questionText.classList.add('hidden');
+            questionStatus.classList.remove('hidden');
+            toggleButton.innerHTML = '<i data-feather="eye" class="w-4 h-4 inline mr-1"></i>Show Text';
+        }
+        
+        feather.replace();
+    }
+}
+
+function updateSpeakingStatus(isSpeaking) {
+    const speakButton = document.getElementById('speakButton');
+    const questionStatus = document.getElementById('questionStatus');
+    
+    if (speakButton) {
+        if (isSpeaking) {
+            speakButton.innerHTML = '<i data-feather="volume-x" class="w-4 h-4 inline mr-1"></i>Stop';
+            speakButton.className = 'bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition';
+            speakButton.onclick = stopSpeaking;
+        } else {
+            speakButton.innerHTML = '<i data-feather="volume-2" class="w-4 h-4 inline mr-1"></i>Speak';
+            speakButton.className = 'bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition';
+            speakButton.onclick = speakCurrentQuestion;
+        }
+        feather.replace();
+    }
+    
+    if (questionStatus) {
+        if (isSpeaking) {
+            questionStatus.innerHTML = `
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                    <i data-feather="volume-2" class="w-8 h-8 text-white"></i>
+                </div>
+                <p class="text-blue-600 font-medium">Speaking question...</p>
+            `;
+        } else {
+            questionStatus.innerHTML = `
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="play" class="w-8 h-8 text-blue-600"></i>
+                </div>
+                <p class="text-gray-600">Question will be spoken automatically</p>
+            `;
+        }
+        feather.replace();
+    }
+}
+
+function stopSpeaking() {
+    speechSynthesis.cancel();
+    updateSpeakingStatus(false);
+}
+
+// Suggest job titles based on CV data using AI
+async function suggestJobTitlesFromCV(cvData) {
+    try {
+        console.log('Suggesting job titles using AI...');
+        
+        const suggestRolesPrompt = `
+You're an AI recruiter at Microsoft.
+
+Based on the candidate's CV summary below, suggest **3 to 5 real job titles** that would be suitable at Microsoft.
+
+These roles should:
+- Match the candidate's background, skills, and experience
+- Be realistic and not overly technical if not appropriate
+- Prefer roles in customer service, operations, business, or product if relevant
+- Avoid suggesting technical roles (like AI Engineer, Data Scientist) unless the candidate has clear technical background
+
+CV Summary:
+- Current Position: ${cvData.basicInfo?.currentPosition || 'N/A'}
+- Experience Summary: ${cvData.experience?.summary || cvData.experience || 'N/A'}
+- Education: ${cvData.education?.background || cvData.education || 'N/A'}
+- Skills: ${Array.isArray(cvData.skills) ? cvData.skills.join(', ') : (cvData.skills || 'N/A')}
+- Recommended Position (if any): ${cvData.recommendedPosition || 'N/A'}
+
+Return JSON array of job titles like:
+["Customer Success Manager", "Product Support Lead", "Client Engagement Specialist"]
+
+Only return the JSON array. No explanation.
+`;
+
+        const response = await callAzureOpenAI(suggestRolesPrompt);
+        
+        // Parse JSON response
+        const jsonMatch = response.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+            const suggestions = JSON.parse(jsonMatch[0]);
+            console.log('AI suggested roles:', suggestions);
+            return suggestions;
+        } else {
+            console.warn('No JSON array found in AI response, using fallback');
+            return getFallbackSuggestions(cvData);
+        }
+        
+    } catch (error) {
+        console.error('Error getting AI suggestions:', error);
+        console.log('Using fallback suggestions');
+        return getFallbackSuggestions(cvData);
+    }
+}
+
+// Fallback suggestions based on simple rules
+function getFallbackSuggestions(cvData) {
+    const skills = Array.isArray(cvData.skills) 
+        ? cvData.skills.map(s => s.toLowerCase())
+        : (cvData.skills || '').toLowerCase().split(',').map(s => s.trim().toLowerCase());
+    
+    const experience = (cvData.experience?.summary || cvData.experience || '').toLowerCase();
+    const currentPosition = (cvData.basicInfo?.currentPosition || '').toLowerCase();
+    
+    const titleSuggestions = [];
+    
+    // Customer Service / Support roles
+    if (experience.includes('customer') || experience.includes('support') || 
+        experience.includes('client') || currentPosition.includes('customer') ||
+        skills.some(s => ['customer service', 'support', 'client'].includes(s))) {
+        titleSuggestions.push("Customer Success Manager", "Client Support Lead", "Customer Experience Specialist");
+    }
+    
+    // Sales / Business roles
+    if (experience.includes('sales') || experience.includes('business') || 
+        experience.includes('account') || currentPosition.includes('sales') ||
+        skills.some(s => ['sales', 'business', 'account'].includes(s))) {
+        titleSuggestions.push("Account Manager", "Business Development Manager", "Sales Specialist");
+    }
+    
+    // Marketing roles
+    if (experience.includes('marketing') || experience.includes('campaign') || 
+        currentPosition.includes('marketing') ||
+        skills.some(s => ['marketing', 'campaign', 'social media'].includes(s))) {
+        titleSuggestions.push("Marketing Manager", "Digital Marketing Specialist", "Campaign Manager");
+    }
+    
+    // HR / People roles
+    if (experience.includes('hr') || experience.includes('human resource') || 
+        experience.includes('recruitment') || currentPosition.includes('hr') ||
+        skills.some(s => ['hr', 'recruitment', 'talent'].includes(s))) {
+        titleSuggestions.push("HR Specialist", "Talent Acquisition Manager", "People Operations");
+    }
+    
+    // Operations / Project Management
+    if (experience.includes('operations') || experience.includes('project') || 
+        experience.includes('coordination') || currentPosition.includes('operations') ||
+        skills.some(s => ['operations', 'project management', 'coordination'].includes(s))) {
+        titleSuggestions.push("Operations Manager", "Project Coordinator", "Program Manager");
+    }
+    
+    // Technical roles (only if clearly technical background)
+    if (skills.some(s => ['react', 'angular', 'vue', 'javascript', 'html', 'css'].includes(s)) || 
+        experience.includes('frontend') || experience.includes('web')) {
+        titleSuggestions.push("Frontend Developer", "Full Stack Developer");
+    }
+    
+    if (skills.some(s => ['node.js', 'python', 'java', 'c#', '.net', 'spring'].includes(s)) || 
+        experience.includes('backend') || experience.includes('api')) {
+        titleSuggestions.push("Backend Developer", "Full Stack Developer");
+    }
+    
+    if (skills.some(s => ['python', 'tensorflow', 'pytorch', 'machine learning', 'ai'].includes(s)) || 
+        experience.includes('machine learning') || experience.includes('ai')) {
+        titleSuggestions.push("AI Engineer", "Machine Learning Engineer", "Data Scientist");
+    }
+    
+    if (skills.some(s => ['python', 'sql', 'data analysis'].includes(s)) || 
+        experience.includes('data') || experience.includes('analytics')) {
+        titleSuggestions.push("Data Scientist", "Data Analyst", "Business Intelligence Engineer");
+    }
+    
+    // Product roles
+    if (experience.includes('product') || experience.includes('roadmap') || 
+        skills.some(s => ['agile', 'scrum', 'product management'].includes(s))) {
+        titleSuggestions.push("Product Manager", "Technical Product Manager");
+    }
+    
+    // Design roles
+    if (skills.some(s => ['figma', 'sketch', 'adobe', 'ui', 'ux', 'design'].includes(s)) || 
+        experience.includes('ui/ux') || experience.includes('design')) {
+        titleSuggestions.push("UX Designer", "UI/UX Designer", "Product Designer");
+    }
+    
+    // Default suggestions if no specific match
+    if (titleSuggestions.length === 0) {
+        titleSuggestions.push("Customer Success Manager", "Operations Specialist", "Business Analyst");
+    }
+    
+    // Remove duplicates and limit to 5 suggestions
+    const uniqueSuggestions = [...new Set(titleSuggestions)];
+    return uniqueSuggestions.slice(0, 5);
+}
+
+// Select position from suggestions
+function selectPosition(position) {
+    console.log('Selected position:', position);
+    
+    // Update CV data with selected position
+    if (cvData) {
+        cvData.recommendedPosition = position;
+    }
+    
+    // Show success message
+    showSuccessMessage(`Đã chọn vị trí: ${position}`);
+    
+    // Update the display
+    const positionDisplay = document.querySelector('.bg-blue-50 .text-blue-700');
+    if (positionDisplay) {
+        positionDisplay.textContent = position;
+    }
+    
+    // Highlight selected position
+    const buttons = document.querySelectorAll('.bg-blue-100');
+    buttons.forEach(btn => {
+        if (btn.textContent === position) {
+            btn.classList.remove('bg-blue-100', 'text-blue-800');
+            btn.classList.add('bg-green-100', 'text-green-800');
+        } else {
+            btn.classList.remove('bg-green-100', 'text-green-800');
+            btn.classList.add('bg-blue-100', 'text-blue-800');
+        }
+    });
+}
+
+// Select custom position
+function selectCustomPosition() {
+    const customPositionInput = document.getElementById('customPosition');
+    const customPosition = customPositionInput.value.trim();
+    
+    if (!customPosition) {
+        showWarningMessage('Vui lòng nhập vị trí tùy chỉnh');
+        return;
+    }
+    
+    console.log('Selected custom position:', customPosition);
+    
+    // Update CV data with custom position
+    if (cvData) {
+        cvData.recommendedPosition = customPosition;
+    }
+    
+    // Show success message
+    showSuccessMessage(`Đã chọn vị trí tùy chỉnh: ${customPosition}`);
+    
+    // Update the display
+    const positionDisplay = document.querySelector('.bg-blue-50 .text-blue-700');
+    if (positionDisplay) {
+        positionDisplay.textContent = customPosition;
+    }
+    
+    // Clear input
+    customPositionInput.value = '';
+>>>>>>> Stashed changes
 }
