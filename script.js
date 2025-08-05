@@ -12,8 +12,6 @@ let currentLanguage = 'en'; // Current language: 'en' or 'vi'
 let interviewResults = []; // Store all feedback
 let interviewStartTime = null;
 let interviewEndTime = null;
-<<<<<<< Updated upstream
-=======
 let speechRecognition = null; // For real-time speech-to-text
 let isListening = false; // For real-time speech recognition
 let transcribedText = ''; // Store transcribed text
@@ -66,7 +64,6 @@ function testFileInputDirectly() {
         console.error('CV file input not found for direct test!');
     }
 }
->>>>>>> Stashed changes
 
 // Make functions globally available
 window.startPractice = function() {
@@ -238,13 +235,6 @@ async function analyzeCV() {
         return;
     }
     
-<<<<<<< Updated upstream
-    // Show loading
-    analysisResult.innerHTML = '<div class="flex items-center"><div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>Đang phân tích CV...</div>';
-    
-    try {
-        // Read file content
-=======
     if (cvPreview) cvPreview.classList.remove('hidden');
     feather.replace();
     
@@ -514,7 +504,6 @@ async function processPDFWithOCR(file) {
 async function processTextFile(file) {
     try {
         console.log('Starting text file processing for:', file.name);
->>>>>>> Stashed changes
         const text = await readFileAsText(file);
         
         // Check if it's a PDF warning
@@ -627,9 +616,6 @@ async function analyzeCVWithAI(cvText) {
         // Try to parse JSON from response
         const jsonMatch = response.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-<<<<<<< Updated upstream
-            return JSON.parse(jsonMatch[0]);
-=======
             const analysis = JSON.parse(jsonMatch[0]);
             console.log('Parsed CV analysis:', analysis);
             
@@ -751,7 +737,6 @@ async function analyzeCVWithAI(cvText) {
             showSuccessMessage('CV đã được phân tích thành công! Bạn có thể bắt đầu phỏng vấn.');
             
             return analysis;
->>>>>>> Stashed changes
         } else {
             throw new Error('No JSON found in response');
         }
@@ -1146,34 +1131,6 @@ async function generateFeedback(answer) {
     const currentQuestion = microsoftQuestions[currentQuestionIndex];
     
     try {
-<<<<<<< Updated upstream
-        const feedback = await callAzureOpenAI(`
-            You are a Microsoft recruiter. Evaluate the candidate's answer to this interview question.
-            
-            Question: ${currentQuestion}
-            Candidate's answer: ${answer}
-            ${cvData ? `CV Information: ${JSON.stringify(cvData)}` : ''}
-            
-            Provide detailed feedback including:
-            1. Score from 0-100
-            2. Strengths (3-4 points)
-            3. Areas for improvement (2-3 points)
-            4. Specific improvement suggestions
-            5. Better answer example
-            
-            Respond in ${currentLanguage === 'en' ? 'English' : 'Vietnamese'}, HTML format.
-        `);
-        
-        // Store result
-        const result = {
-            questionIndex: currentQuestionIndex,
-            question: currentQuestion,
-            answer: answer,
-            feedback: feedback,
-            timestamp: Date.now()
-        };
-        interviewResults.push(result);
-=======
         console.log('Generating feedback for answer:', answer.substring(0, 100) + '...');
         
         const response = await callAzureOpenAI(`
@@ -1284,9 +1241,6 @@ Role: ${cvData?.recommendedPosition || 'Software Engineer'}
         
         // Return the response for use in processRecording
         return feedbackData;
->>>>>>> Stashed changes
-        
-        return feedback;
     } catch (error) {
         console.error('Feedback generation error:', error);
         const fallbackFeedback = currentLanguage === 'en' 
@@ -1318,9 +1272,6 @@ Role: ${cvData?.recommendedPosition || 'Software Engineer'}
         };
         interviewResults.push(result);
         
-<<<<<<< Updated upstream
-        return fallbackFeedback;
-=======
         // Show next question button
         const nextBtn = document.getElementById('nextQuestion');
         if (nextBtn) {
@@ -1407,7 +1358,6 @@ function updateInterviewProgress() {
         const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
         progressBar.style.width = progress + '%';
         progressText.textContent = `Câu ${currentQuestionIndex + 1} / ${questions.length}`;
->>>>>>> Stashed changes
     }
 }
 
@@ -2222,8 +2172,6 @@ async function callAzureOpenAI(prompt) {
         console.error('Azure OpenAI API error:', error);
         throw error;
     }
-<<<<<<< Updated upstream
-=======
 }
 
 // Analyze CV function (called from HTML)
@@ -2828,5 +2776,4 @@ function selectCustomPosition() {
     
     // Clear input
     customPositionInput.value = '';
->>>>>>> Stashed changes
 }

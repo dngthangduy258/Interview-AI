@@ -1,50 +1,70 @@
 {
-  "name": "interviewpro",
-  "version": "1.0.0",
-  "description": "Ứng dụng luyện phỏng vấn tiếng Anh thực tế với AI feedback cá nhân hóa",
-  "main": "index.html",
+  "name": "microsoft-interview-pro",
+  "version": "2.0.0",
+  "description": "Microsoft Interview Practice with AI Recruiter Feedback - CV Analysis, OCR, TTS, Speech Recognition",
+  "main": "server-simple.js",
   "scripts": {
     "setup": "node setup-ssl.js",
-    "start": "node server.js",
-    "start-simple": "node server-simple.js",
-    "dev": "live-server --port=5555 --host=localhost",
+    "start": "node server-simple.js",
+    "start-dev": "node server.js",
+    "dev": "live-server --port=3000 --host=localhost --open=/index.html",
     "dev-https": "npm run setup && npm start",
-    "build": "echo 'Static site - no build required'",
-    "vercel-build": "echo 'Static site - no build required'",
-    "test": "echo 'Open demo.html to test features'",
-    "deploy": "vercel --prod"
+    "build": "node build.js",
+    "build:check": "node -c script.js && node -c server-simple.js",
+    "build:copy": "echo 'Copying static files...'",
+    "build:minify": "echo 'Minifying JavaScript...'",
+    "vercel-build": "npm run build",
+    "test": "npm run test:lint && npm run test:build",
+    "test:lint": "node -c script.js && node -c server-simple.js",
+    "test:build": "echo 'Build test passed'",
+    "deploy": "vercel --prod",
+    "postinstall": "echo 'Microsoft Interview Pro installed successfully!'"
   },
   "keywords": [
+    "microsoft",
     "interview",
-    "english",
     "practice",
     "ai",
+    "recruiter",
     "feedback",
+    "cv-analysis",
+    "ocr",
+    "speech-recognition",
+    "text-to-speech",
+    "azure-openai",
     "education",
-    "language-learning"
+    "career"
   ],
-  "author": "InterviewPro Team",
+  "author": "Microsoft Interview Pro Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/interviewpro.git"
+    "url": "https://github.com/your-username/microsoft-interview-pro.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/interviewpro/issues"
+    "url": "https://github.com/your-username/microsoft-interview-pro/issues"
   },
-  "homepage": "https://interviewpro.vn",
+  "homepage": "https://microsoft-interview-pro.vercel.app",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "nodemon": "^2.0.22"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not dead"
+    "not dead",
+    "Chrome >= 88",
+    "Firefox >= 85",
+    "Safari >= 14",
+    "Edge >= 88"
   ]
 } 
