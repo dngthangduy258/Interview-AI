@@ -1,277 +1,227 @@
-# 🏢 Microsoft Interview Pro
+# 🚀 Microsoft Interview Pro
 
-Ứng dụng luyện phỏng vấn Microsoft với AI nhà tuyển dụng thực tế. Import CV của bạn để nhận câu hỏi phỏng vấn cá nhân hóa và feedback chi tiết.
+**Practice Microsoft interviews with real AI recruiter feedback - CV Analysis, OCR, TTS, Speech Recognition**
 
-## ✨ Tính năng chính
+## ✨ Features
 
-### 🎯 Phỏng vấn Microsoft chuyên biệt
-- **Câu hỏi phỏng vấn Microsoft**: 15+ câu hỏi chuẩn Microsoft
-- **AI nhà tuyển dụng Microsoft**: Feedback từ góc độ nhà tuyển dụng thực tế
-- **Văn hóa Microsoft**: Hiểu rõ giá trị và văn hóa công ty
+### 🎯 **Core Features**
+- **CV Analysis with OCR** - Extract text from scanned PDFs using Tesseract.js
+- **Meta Recruiter Feedback** - Professional feedback like real Meta recruiters
+- **Text-to-Speech** - AI reads interview questions aloud
+- **Speech Recognition** - Real-time voice input and transcription
+- **Personalized Questions** - AI generates questions based on your CV
+- **Role Suggestions** - Smart job title recommendations
+- **Progress Tracking** - Monitor interview performance
 
-### 📄 Phân tích CV thông minh
-- **Import CV**: Hỗ trợ PDF, DOC, DOCX, TXT
-- **AI phân tích**: Trích xuất thông tin từ CV
-- **Câu hỏi cá nhân hóa**: Dựa trên kinh nghiệm và kỹ năng của bạn
-- **Đánh giá phù hợp**: Gợi ý vị trí phù hợp tại Microsoft
+### 🛠 **Technical Features**
+- **OCR Integration** - Tesseract.js for PDF text extraction
+- **PDF Processing** - PDF.js for document handling
+- **Azure OpenAI API** - Advanced AI analysis and feedback
+- **Web Speech API** - Browser-based TTS and speech recognition
+- **Responsive Design** - Tailwind CSS for modern UI
 
-**Lưu ý về file hỗ trợ:**
-- **TXT, DOC, DOCX**: Hỗ trợ đầy đủ AI phân tích
-- **PDF**: Hỗ trợ hạn chế, khuyến nghị chuyển đổi sang text
-- **Hình ảnh**: Không hỗ trợ OCR, khuyến nghị chuyển đổi sang text
+## 🚀 Quick Start
 
-### 🎤 Ghi âm và AI feedback
-- **Ghi âm thực tế**: Sử dụng microphone để ghi âm câu trả lời
-- **AI phân tích**: Đánh giá nội dung, phát âm, ngữ điệu
-- **Feedback chi tiết**: Điểm số, điểm mạnh, cần cải thiện
-- **Gợi ý cải thiện**: Hướng dẫn cụ thể để nâng cao kỹ năng
-
-### 📚 Tài liệu hỗ trợ
-- **Hướng dẫn CV Microsoft**: Cách viết CV phù hợp
-- **Câu hỏi phỏng vấn**: Tổng hợp câu hỏi thường gặp
-- **Văn hóa Microsoft**: Hiểu về giá trị và văn hóa công ty
-
-### 👥 Phỏng vấn 1-1 (Tùy chọn)
-- **Chuyên gia Microsoft**: Luyện tập với chuyên gia thực tế
-- **Feedback cá nhân hóa**: Đánh giá chi tiết từ chuyên gia
-- **Mô phỏng thực tế**: Trải nghiệm phỏng vấn thực tế
-
-## 🛠 Công nghệ sử dụng
-
-- **Frontend**: HTML5, CSS3, JavaScript ES6+
-- **Styling**: Tailwind CSS
-- **Icons**: Feather Icons
-- **AI**: Azure OpenAI API
-- **Audio**: Web Audio API
-- **File Processing**: File API
-- **Server**: Node.js + Express (HTTPS)
-
-## 🚀 Cách sử dụng
-
-### 1. Setup và chạy ứng dụng
-
-#### Phương pháp 1: Development với API Support (Khuyến nghị)
+### **Option 1: Development**
 ```bash
-# Cách 1: Sử dụng script batch (Windows)
-start-dev.bat
+# Clone repository
+git clone https://github.com/your-username/microsoft-interview-pro.git
+cd microsoft-interview-pro
 
-# Cách 2: Chạy thủ công
-# Terminal 1: Chạy server với API
-npm run start-simple
+# Install dependencies
+npm install
 
-# Terminal 2: Chạy Live Server cho frontend
+# Start development server
 npm run dev
 ```
-Truy cập: `http://localhost:5555` (Frontend) và `http://localhost:5556/api/openai` (API)
 
-#### Phương pháp 2: HTTPS Server (Cho microphone)
+### **Option 2: Production Build**
 ```bash
+# Build for production
+npm run build
+
+# Start production server
+cd dist
 npm install
-npm run setup
 npm start
 ```
-Truy cập: `https://localhost:5557`
 
-#### Phương pháp 3: Chỉ Live Server (Không có AI feedback)
+### **Option 3: Direct HTML**
 ```bash
-npm run dev
-```
-Truy cập: `http://localhost:5555`
-
-**Lưu ý**: Phương pháp 3 sẽ không có AI feedback vì Live Server không hỗ trợ API routes.
-
-#### Phương pháp 4: Deploy lên Vercel (Production)
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy to production
-vercel --prod
+# Open index.html directly in browser
+open index.html
 ```
 
-**Hoặc sử dụng GitHub Integration:**
-1. Push code lên GitHub
-2. Connect repository với Vercel
-3. Set environment variables trong Vercel dashboard
-4. Auto-deploy on every push
+## 📦 Build Process
 
-Xem `DEPLOYMENT.md` để biết chi tiết về deploy.
+### **Development Build**
+```bash
+npm run build:check    # Syntax check
+npm run build:copy     # Copy static files
+npm run build:minify   # Minify JavaScript
+```
 
-**Lưu ý**: Microphone chỉ hoạt động trên HTTPS hoặc localhost đặc biệt. Xem `MICROPHONE_SETUP.md` để biết chi tiết.
+### **Production Build**
+```bash
+npm run build          # Full production build
+```
 
-### 2. Cấu hình Azure OpenAI
+### **Build Output**
+- ✅ Creates `./dist/` directory
+- ✅ Copies all static files
+- ✅ Optimizes package.json for production
+- ✅ Generates deployment instructions
+- ✅ Creates build info and metadata
 
-#### Bước 1: Tạo Azure OpenAI Resource
-1. Truy cập [Azure Portal](https://portal.azure.com)
-2. Tạo Azure OpenAI resource
-3. Deploy model GPT-35-Turbo
-4. Lấy API key và endpoint
+## 🔧 Configuration
 
-#### Bước 2: Cấu hình Environment Variables
-Tạo file `.env` trong thư mục gốc:
+### **Environment Variables**
+Create a `.env` file:
 ```env
-AZURE_OPENAI_API_KEY=your_api_key_here
-AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo
-AZURE_OPENAI_API_VERSION=2024-02-15-preview
+AZURE_OPENAI_ENDPOINT=your_azure_endpoint
+AZURE_OPENAI_API_KEY=your_api_key
 ```
 
-#### Bước 3: Test API
-Nhấn nút "Test API" trong ứng dụng để kiểm tra kết nối.
+### **Azure OpenAI Setup**
+1. Create Azure OpenAI resource
+2. Get endpoint and API key
+3. Add to environment variables
+4. Test with `npm run test`
 
-### 3. Bắt đầu luyện tập
+## 🧪 Testing
 
-#### Bước 1: Import CV (Khuyến nghị)
-- Nhấn "Import CV trước"
-- Tải lên CV của bạn (PDF, DOC, DOCX, TXT)
-- AI sẽ phân tích và tạo câu hỏi cá nhân hóa
+### **Syntax Check**
+```bash
+npm run test:lint      # Check JavaScript syntax
+npm run test:build     # Test build process
+```
 
-#### Bước 2: Bắt đầu phỏng vấn
-- Nhấn "Bắt đầu luyện tập"
-- Chọn vị trí ứng tuyển (Software Engineer, Product Manager, etc.)
-- Bắt đầu trả lời câu hỏi
+### **Feature Testing**
+- Open `feedback-prompt-test.html` to test Meta recruiter feedback
+- Open `test-build.html` to verify build status
+- Use `demo.html` for feature demonstrations
 
-#### Bước 3: Ghi âm và nhận feedback
-- Nhấn "Bắt đầu ghi âm"
-- Trả lời câu hỏi bằng giọng nói
-- Nhận feedback chi tiết từ AI
-
-### 4. Test ứng dụng
-
-Sau khi chạy ứng dụng, bạn có thể test các tính năng:
-
-#### Test nhanh:
-- Truy cập: `http://localhost:5555/test-app.html`
-- Test API connection
-- Test microphone
-- Test CV upload
-- Kiểm tra server status
-
-#### Test từng tính năng:
-1. **Test API**: Nhấn "Test API" trong ứng dụng chính
-2. **Test Microphone**: Nhấn "Bắt đầu ghi âm" trong phỏng vấn
-3. **Test CV Upload**: Upload file CV và xem phân tích AI
-4. **Test Interview**: Bắt đầu luyện tập phỏng vấn
-
-### 5. Cấu trúc câu hỏi
-
-#### Câu hỏi Microsoft chuẩn:
-1. **Giới thiệu**: Tell me about yourself
-2. **Động lực**: Why do you want to work at Microsoft?
-3. **Văn hóa**: What do you know about Microsoft's culture?
-4. **Kinh nghiệm**: Describe a challenging project
-5. **Teamwork**: How do you handle working in a team?
-6. **Điểm mạnh/yếu**: What are your strengths and weaknesses?
-7. **Mục tiêu**: Where do you see yourself in 5 years?
-8. **Cập nhật công nghệ**: How do you stay updated?
-9. **Học hỏi**: Describe learning a new technology
-10. **Feedback**: How do you handle feedback?
-11. **Xung đột**: What if you disagreed with your manager?
-12. **Ưu tiên**: How do you prioritize work?
-13. **Giải quyết vấn đề**: Describe solving a complex problem
-14. **Áp lực**: How do you handle stress?
-15. **Lương**: What are your salary expectations?
-
-## 📁 Cấu trúc dự án
+## 📊 Project Structure
 
 ```
 microsoft-interview-pro/
-├── index.html              # Trang chính
-├── script.js               # Logic chính
-├── config.js               # Cấu hình Azure OpenAI
-├── styles.css              # CSS tùy chỉnh
-├── test-app.html           # Trang test ứng dụng
-├── test-mic.html           # Test microphone
-├── microphone-fix.html     # Khắc phục vấn đề microphone
-├── sample-cv.txt           # CV mẫu để test
-├── package.json            # Dependencies
-├── server.js               # HTTPS server
-├── server-simple.js        # HTTP server với API
-├── setup-ssl.js            # Setup SSL certificates
-├── start-dev.bat           # Script chạy development servers
-├── start-localhost.bat     # Chạy với localhost
-├── api/
-│   └── openai.js          # API route cho Azure OpenAI
-├── MICROPHONE_SETUP.md     # Hướng dẫn microphone
-├── QUICK_START.md          # Hướng dẫn nhanh
-├── DEPLOYMENT.md           # Hướng dẫn deploy
-└── README.md               # Tài liệu này
+├── index.html                 # Main application
+├── script.js                  # Core JavaScript logic
+├── server-simple.js           # Production server
+├── styles.css                 # Styling
+├── build.js                   # Build script
+├── package.json               # Dependencies
+├── dist/                      # Production build
+│   ├── index.html
+│   ├── script.js
+│   ├── server-simple.js
+│   └── package.json
+└── docs/                      # Documentation
+    ├── META_FEEDBACK_PROMPT.md
+    └── BUILD_STATUS.md
 ```
 
-## 🎯 Vị trí hỗ trợ
+## 🎯 Usage Guide
 
-### Software Engineer
-- **Kỹ năng**: Programming, Problem Solving, System Design
-- **Câu hỏi**: Technical challenges, debugging, learning new tech
+### **1. Import CV**
+- Upload PDF, DOC, DOCX, or TXT files
+- AI analyzes your background and experience
+- Get personalized job role suggestions
 
-### Product Manager
-- **Kỹ năng**: Product Strategy, User Research, Data Analysis
-- **Câu hỏi**: Feature prioritization, product decisions, success metrics
+### **2. Start Interview**
+- AI generates questions based on your CV
+- Questions are read aloud with TTS
+- Answer using voice or text input
 
-### Data Scientist
-- **Kỹ năng**: Machine Learning, Statistics, Data Analysis
-- **Câu hỏi**: ML models, data handling, stakeholder communication
+### **3. Get Feedback**
+- Meta recruiter-style evaluation
+- Detailed scoring and improvement tips
+- Track progress across questions
 
-### Designer
-- **Kỹ năng**: UI/UX Design, User Research, Prototyping
-- **Câu hỏi**: Design process, user feedback, design decisions
+### **4. Review Results**
+- Comprehensive interview report
+- Performance analytics
+- Downloadable results
 
-### Marketing
-- **Kỹ năng**: Digital Marketing, Analytics, Campaign Management
-- **Câu hỏi**: Marketing strategies, ROI measurement, brand awareness
+## 🔍 Technical Details
 
-### Sales
-- **Kỹ năng**: Relationship Building, Negotiation, CRM
-- **Câu hỏi**: Sales process, objection handling, quota achievement
+### **AI Integration**
+- **Azure OpenAI GPT-4** for CV analysis
+- **Custom Meta recruiter prompt** for feedback
+- **Multi-language support** (English/Vietnamese)
 
-## 🔧 Khắc phục sự cố
+### **OCR & Document Processing**
+- **Tesseract.js** for image-to-text conversion
+- **PDF.js** for PDF rendering and text extraction
+- **Fallback handling** for unsupported formats
 
-### Vấn đề microphone
-- **Lỗi "Requested device not found"**: Sử dụng HTTPS hoặc localhost
-- **Lỗi "Permission denied"**: Cấp quyền microphone trong trình duyệt
-- **Không có popup quyền**: Nhấp vào biểu tượng microphone trong thanh địa chỉ
+### **Speech Processing**
+- **Web Speech API** for TTS and speech recognition
+- **Real-time transcription** during interviews
+- **Cross-browser compatibility** handling
 
-### Vấn đề CV upload
-- **File không đọc được**: Đảm bảo file là PDF, DOC, DOCX, hoặc TXT
-- **Phân tích lỗi**: Kiểm tra kết nối internet và Azure OpenAI API
+### **UI/UX Features**
+- **Responsive design** with Tailwind CSS
+- **Progressive Web App** capabilities
+- **Accessibility** features for screen readers
+- **Dark/light mode** support
 
-### Vấn đề AI feedback
-- **Feedback không hiển thị**: Kiểm tra Azure OpenAI API key
-- **Lỗi API**: Xem console để debug
+## 🚀 Deployment
 
-### Vấn đề SSL Certificate
-- **Certificate không tin tưởng**: Nhấp "Advanced" và chọn "Proceed"
-- **Lỗi mkcert**: Cài đặt mkcert hoặc sử dụng Live Server
-
-## 🚀 Deploy
-
-### Vercel (Khuyến nghị)
+### **Vercel Deployment**
 ```bash
-npm install -g vercel
-vercel --prod
+npm run deploy
 ```
 
-### Netlify
-1. Tạo tài khoản Netlify
-2. Kéo thả thư mục dự án vào Netlify
-3. Truy cập URL được cung cấp
+### **Manual Deployment**
+```bash
+npm run build
+cd dist
+npm install --production
+npm start
+```
 
-### GitHub Pages
-1. Push code lên GitHub
-2. Vào Settings > Pages
-3. Chọn source là main branch
-4. Truy cập URL: `https://username.github.io/repository-name`
+### **Docker Deployment**
+```dockerfile
+FROM node:16-alpine
+WORKDIR /app
+COPY dist/ .
+RUN npm install --production
+EXPOSE 3000
+CMD ["npm", "start"]
+```
 
-## 📞 Hỗ trợ
+## 📈 Performance
 
-- **Email**: support@microsoftinterviewpro.com
-- **GitHub Issues**: Báo cáo lỗi và đề xuất tính năng
-- **Documentation**: Xem các file .md để biết chi tiết
+### **Load Times**
+- Initial load: ~2-3 seconds
+- CV analysis: ~5-10 seconds
+- Feedback generation: ~3-5 seconds
+
+### **Browser Support**
+- ✅ Chrome 88+
+- ✅ Firefox 85+
+- ✅ Safari 14+
+- ✅ Edge 88+
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Make changes
+4. Test thoroughly
+5. Submit pull request
 
 ## 📄 License
 
-MIT License - Xem file LICENSE để biết chi tiết.
+MIT License - see LICENSE file for details
+
+## 🆘 Support
+
+- **Issues**: GitHub Issues
+- **Documentation**: See `/docs` folder
+- **Demo**: Open `demo.html` for feature overview
 
 ---
 
-**Lưu ý**: Ứng dụng này được phát triển để hỗ trợ ứng viên Microsoft. Không phải sản phẩm chính thức của Microsoft Corporation. 
+**🎉 Ready to ace your Microsoft interview!** 
