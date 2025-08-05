@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Recruiter Feedback Test - Microsoft Interview Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">🎯 Meta Recruiter Feedback Test</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📝 Interview Response</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Question:</label>
+                        <select id="questionSelect" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="Tell me about a time you had to deal with a difficult team member.">Tell me about a time you had to deal with a difficult team member.</option>
+                            <option value="Why do you want to work at Meta?">Why do you want to work at Meta?</option>
+                            <option value="Describe a challenging project you worked on.">Describe a challenging project you worked on.</option>
+                            <option value="How do you handle feedback and criticism?">How do you handle feedback and criticism?</option>
+                            <option value="Tell me about yourself.">Tell me about yourself.</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Role:</label>
+                        <select id="roleSelect" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="Software Engineer">Software Engineer</option>
+                            <option value="Product Manager">Product Manager</option>
+                            <option value="Data Scientist">Data Scientist</option>
+                            <option value="UX Designer">UX Designer</option>
+                            <option value="Marketing Manager">Marketing Manager</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Your Answer:</label>
+                        <textarea id="answerInput" rows="4" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your interview answer here...">Yes. There was one time my teammate didn't deliver work and I got frustrated, so I finished the task myself.</textarea>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="testFeedback()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            🎯 Test Meta Feedback
+                        </button>
+                        <button onclick="loadTestCases()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                            🧪 Load Test Cases
+                        </button>
+                        <button onclick="clearResults()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📊 Meta Recruiter Feedback</h2>
+                
+                <div id="results" class="space-y-4">
+                    <div class="text-gray-500 text-center py-8">
+                        Click "Test Meta Feedback" to see recruiter evaluation
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Cases -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">🧪 Test Cases</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="loadTestCase('poor')" class="bg-red-100 p-4 rounded-lg hover:bg-red-200 transition">
+                    <h3 class="font-semibold text-red-800">Poor Answer</h3>
+                    <p class="text-sm text-red-600">Short, unstructured response</p>
+                </button>
+                
+                <button onclick="loadTestCase('below-average')" class="bg-orange-100 p-4 rounded-lg hover:bg-orange-200 transition">
+                    <h3 class="font-semibold text-orange-800">Below Average</h3>
+                    <p class="text-sm text-orange-600">Some structure, lacks detail</p>
+                </button>
+                
+                <button onclick="loadTestCase('average')" class="bg-yellow-100 p-4 rounded-lg hover:bg-yellow-200 transition">
+                    <h3 class="font-semibold text-yellow-800">Average</h3>
+                    <p class="text-sm text-yellow-600">Decent structure, moderate detail</p>
+                </button>
+                
+                <button onclick="loadTestCase('good')" class="bg-blue-100 p-4 rounded-lg hover:bg-blue-200 transition">
+                    <h3 class="font-semibold text-blue-800">Good</h3>
+                    <p class="text-sm text-blue-600">Well-structured, good examples</p>
+                </button>
+                
+                <button onclick="loadTestCase('excellent')" class="bg-green-100 p-4 rounded-lg hover:bg-green-200 transition">
+                    <h3 class="font-semibold text-green-800">Excellent</h3>
+                    <p class="text-sm text-green-600">STAR format, detailed, impactful</p>
+                </button>
+                
+                <button onclick="loadTestCase('technical')" class="bg-purple-100 p-4 rounded-lg hover:bg-purple-200 transition">
+                    <h3 class="font-semibold text-purple-800">Technical</h3>
+                    <p class="text-sm text-purple-600">Software engineering response</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Prompt Details -->
+        <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-yellow-800 mb-4">🔍 Meta Recruiter Prompt Details</h2>
+            
+            <div class="space-y-3 text-yellow-700">
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">🎯</span>
+                    <div>
+                        <p class="font-medium">Role: Meta Senior Recruiter</p>
+                        <p class="text-sm">Evaluates like a real Meta recruiter, not a language teacher</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">📊</span>
+                    <div>
+                        <p class="font-medium">Scoring: 0-10 scale with 5 levels</p>
+                        <p class="text-sm">Poor, Below Average, Average, Good, Excellent</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">💬</span>
+                    <div>
+                        <p class="font-medium">Evaluation Criteria:</p>
+                        <p class="text-sm">Structure (STAR), English fluency, Technical depth, Cultural fit, Confidence</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">💡</span>
+                    <div>
+                        <p class="font-medium">Output Format: JSON</p>
+                        <p class="text-sm">Structured data for consistent feedback display</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock AI response function
+        function getMockFeedback(question, answer, role) {
+            const responses = {
+                'Tell me about a time you had to deal with a difficult team member.': {
+                    'Yes. There was one time my teammate didn\'t deliver work and I got frustrated, so I finished the task myself.': {
+                        score: 4.5,
+                        level: "Below Average",
+                        feedback: "The answer lacks structure and detail. It doesn't demonstrate leadership, conflict resolution, or communication. The candidate seemed passive and didn't show initiative to solve the interpersonal issue.",
+                        tips: "Use the STAR method to structure your response. Explain the situation, your actions to address the problem (e.g., direct communication, offering support), and what you learned. Recruiters value collaboration, not just task completion."
+                    },
+                    'I had a teammate who was consistently missing deadlines. I scheduled a one-on-one meeting to understand their challenges. I offered to help with workload prioritization and set up regular check-ins. This improved our collaboration and project delivery.': {
+                        score: 8.0,
+                        level: "Good",
+                        feedback: "Good use of STAR structure. Shows proactive approach to conflict resolution and leadership. Demonstrates empathy and problem-solving skills. Could provide more specific outcomes and metrics.",
+                        tips: "Add specific metrics or outcomes (e.g., 'reduced missed deadlines by 80%'). Include what you learned and how it improved your leadership approach."
+                    }
+                },
+                'Why do you want to work at Meta?': {
+                    'I want to work at Meta because it\'s a big company with good benefits.': {
+                        score: 3.0,
+                        level: "Poor",
+                        feedback: "Generic and superficial answer. Shows no research about Meta's mission, values, or specific opportunities. Lacks passion and genuine interest in the company.",
+                        tips: "Research Meta's mission, values, and recent projects. Connect your skills and interests to specific opportunities. Show genuine passion for the company's impact."
+                    },
+                    'I\'m passionate about Meta\'s mission to give people the power to build community. I\'ve used Facebook and Instagram to connect with family abroad, and I want to help build products that bring people together globally.': {
+                        score: 8.5,
+                        level: "Good",
+                        feedback: "Shows genuine interest and personal connection to Meta's mission. Demonstrates research and understanding of the company's impact. Could be more specific about role alignment.",
+                        tips: "Connect your specific skills and experience to the role you're applying for. Mention specific Meta products or projects that excite you."
+                    }
+                },
+                'Describe a challenging project you worked on.': {
+                    'I worked on a website project. It was challenging because we had to finish it quickly.': {
+                        score: 4.0,
+                        level: "Below Average",
+                        feedback: "Vague and lacks technical depth. No specific challenges, solutions, or outcomes mentioned. Doesn't demonstrate problem-solving or technical skills.",
+                        tips: "Use STAR method. Describe specific technical challenges, your approach to solving them, and measurable outcomes. Include technologies used and team collaboration."
+                    },
+                    'I led a team of 5 developers to build a real-time chat application using React and Node.js. The main challenge was handling 10,000+ concurrent users. I implemented Redis caching and WebSocket optimization, reducing latency by 60%.': {
+                        score: 9.0,
+                        level: "Excellent",
+                        feedback: "Excellent technical depth and leadership. Clear problem identification, specific technical solutions, and measurable outcomes. Demonstrates both technical and leadership skills.",
+                        tips: "Great answer! Consider adding how you handled team dynamics and what you learned for future projects."
+                    }
+                }
+            };
+            
+            // Return mock response or default
+            const questionResponses = responses[question];
+            if (questionResponses && questionResponses[answer]) {
+                return questionResponses[answer];
+            }
+            
+            // Default response based on answer length and content
+            const answerLength = answer.length;
+            const hasKeywords = answer.toLowerCase().includes('i') && answer.toLowerCase().includes('worked');
+            
+            if (answerLength < 50) {
+                return {
+                    score: 3.0,
+                    level: "Poor",
+                    feedback: "Answer is too short and lacks detail. Doesn't demonstrate the depth expected for this role.",
+                    tips: "Provide more specific examples and use the STAR method to structure your response."
+                };
+            } else if (answerLength < 150) {
+                return {
+                    score: 6.0,
+                    level: "Average",
+                    feedback: "Answer shows some structure but could be more detailed. Consider adding specific examples and outcomes.",
+                    tips: "Include specific metrics, outcomes, and what you learned from the experience."
+                };
+            } else {
+                return {
+                    score: 7.5,
+                    level: "Good",
+                    feedback: "Good length and structure. Shows understanding of the question and provides relevant examples.",
+                    tips: "Consider adding more specific technical details or quantifiable outcomes to make your answer even stronger."
+                };
+            }
+        }
+
+        // Generate HTML feedback from JSON data
+        function generateFeedbackHTML(feedbackData) {
+            const { score, level, feedback, tips } = feedbackData;
+            
+            // Get color and icon based on level
+            const getLevelStyle = (level) => {
+                switch(level.toLowerCase()) {
+                    case 'excellent':
+                        return { color: 'green', icon: '🏆', bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800' };
+                    case 'good':
+                        return { color: 'blue', icon: '👍', bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800' };
+                    case 'average':
+                        return { color: 'yellow', icon: '⚠️', bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800' };
+                    case 'below average':
+                        return { color: 'orange', icon: '📉', bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-800' };
+                    case 'poor':
+                        return { color: 'red', icon: '❌', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800' };
+                    default:
+                        return { color: 'gray', icon: '📊', bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-800' };
+                }
+            };
+            
+            const levelStyle = getLevelStyle(level);
+            const scorePercentage = Math.round(score * 10);
+            
+            return `
+                <div class="feedback-container bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">🎯 Meta Recruiter Feedback</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-800 mb-2">📊 Overall Score</h4>
+                            <p class="text-2xl font-bold text-green-600">${score}/10</p>
+                            <p class="text-sm text-green-600">(${scorePercentage}%)</p>
+                        </div>
+                        <div class="${levelStyle.bg} border ${levelStyle.border} rounded-lg p-4">
+                            <h4 class="font-semibold ${levelStyle.text} mb-2">${levelStyle.icon} Performance Level</h4>
+                            <p class="text-lg font-medium ${levelStyle.text}">${level}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">💬 Recruiter Feedback</h4>
+                            <p class="text-sm text-gray-600">${feedback}</p>
+                        </div>
+                        
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">💡 Improvement Tips</h4>
+                            <p class="text-sm text-gray-600">${tips}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-600">
+                            <strong>Note:</strong> This feedback is provided by Meta's AI recruiter simulation. 
+                            For real interview preparation, consider working with professional career coaches.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function testFeedback() {
+            const resultsDiv = document.getElementById('results');
+            const question = document.getElementById('questionSelect').value;
+            const role = document.getElementById('roleSelect').value;
+            const answer = document.getElementById('answerInput').value;
+            
+            if (!answer.trim()) {
+                alert('Please enter an answer to test.');
+                return;
+            }
+            
+            // Show loading
+            resultsDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-blue-800">Meta Recruiter evaluating...</span>
+                        <span class="text-sm text-blue-600">Processing</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse" style="width: 60%"></div>
+                    </div>
+                    <div class="text-xs text-blue-600">
+                        <i data-feather="loader" class="w-4 h-4 inline mr-1 animate-spin"></i>
+                        Analyzing response quality and providing feedback...
+                    </div>
+                </div>
+            `;
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Get mock feedback
+            const feedbackData = getMockFeedback(question, answer, role);
+            
+            // Generate HTML
+            const feedbackHtml = generateFeedbackHTML(feedbackData);
+            
+            // Display results
+            resultsDiv.innerHTML = feedbackHtml;
+        }
+
+        function loadTestCases() {
+            const testCases = {
+                'poor': {
+                    question: 'Tell me about a time you had to deal with a difficult team member.',
+                    answer: 'Yes. There was one time my teammate didn\'t deliver work and I got frustrated, so I finished the task myself.',
+                    role: 'Software Engineer'
+                },
+                'below-average': {
+                    question: 'Why do you want to work at Meta?',
+                    answer: 'I want to work at Meta because it\'s a big company with good benefits.',
+                    role: 'Product Manager'
+                },
+                'average': {
+                    question: 'Describe a challenging project you worked on.',
+                    answer: 'I worked on a website project. It was challenging because we had to finish it quickly.',
+                    role: 'Software Engineer'
+                },
+                'good': {
+                    question: 'Tell me about a time you had to deal with a difficult team member.',
+                    answer: 'I had a teammate who was consistently missing deadlines. I scheduled a one-on-one meeting to understand their challenges. I offered to help with workload prioritization and set up regular check-ins. This improved our collaboration and project delivery.',
+                    role: 'Product Manager'
+                },
+                'excellent': {
+                    question: 'Describe a challenging project you worked on.',
+                    answer: 'I led a team of 5 developers to build a real-time chat application using React and Node.js. The main challenge was handling 10,000+ concurrent users. I implemented Redis caching and WebSocket optimization, reducing latency by 60%.',
+                    role: 'Software Engineer'
+                },
+                'technical': {
+                    question: 'How would you design a scalable notification system?',
+                    answer: 'I would use a microservices architecture with message queues like Kafka. The notification service would handle different types (email, push, SMS) with separate workers. I\'d implement rate limiting and use Redis for caching user preferences.',
+                    role: 'Software Engineer'
+                }
+            };
+            
+            // Show test cases in a modal or dropdown
+            let testCaseOptions = '<option value="">Select a test case...</option>';
+            Object.keys(testCases).forEach(key => {
+                const tc = testCases[key];
+                testCaseOptions += `<option value="${key}">${key.charAt(0).toUpperCase() + key.slice(1)} - ${tc.question.substring(0, 50)}...</option>`;
+            });
+            
+            const testCaseSelect = document.createElement('select');
+            testCaseSelect.className = 'w-full p-2 border border-gray-300 rounded-md mb-4';
+            testCaseSelect.innerHTML = testCaseOptions;
+            testCaseSelect.onchange = function() {
+                const selected = testCases[this.value];
+                if (selected) {
+                    document.getElementById('questionSelect').value = selected.question;
+                    document.getElementById('roleSelect').value = selected.role;
+                    document.getElementById('answerInput').value = selected.answer;
+                }
+            };
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-800 mb-2">🧪 Test Cases</h4>
+                    <p class="text-sm text-blue-700 mb-4">Select a test case to load sample data:</p>
+                    ${testCaseSelect.outerHTML}
+                </div>
+            `;
+        }
+
+        function loadTestCase(type) {
+            const testCases = {
+                'poor': {
+                    question: 'Tell me about a time you had to deal with a difficult team member.',
+                    answer: 'Yes. There was one time my teammate didn\'t deliver work and I got frustrated, so I finished the task myself.',
+                    role: 'Software Engineer'
+                },
+                'below-average': {
+                    question: 'Why do you want to work at Meta?',
+                    answer: 'I want to work at Meta because it\'s a big company with good benefits.',
+                    role: 'Product Manager'
+                },
+                'average': {
+                    question: 'Describe a challenging project you worked on.',
+                    answer: 'I worked on a website project. It was challenging because we had to finish it quickly.',
+                    role: 'Software Engineer'
+                },
+                'good': {
+                    question: 'Tell me about a time you had to deal with a difficult team member.',
+                    answer: 'I had a teammate who was consistently missing deadlines. I scheduled a one-on-one meeting to understand their challenges. I offered to help with workload prioritization and set up regular check-ins. This improved our collaboration and project delivery.',
+                    role: 'Product Manager'
+                },
+                'excellent': {
+                    question: 'Describe a challenging project you worked on.',
+                    answer: 'I led a team of 5 developers to build a real-time chat application using React and Node.js. The main challenge was handling 10,000+ concurrent users. I implemented Redis caching and WebSocket optimization, reducing latency by 60%.',
+                    role: 'Software Engineer'
+                },
+                'technical': {
+                    question: 'How would you design a scalable notification system?',
+                    answer: 'I would use a microservices architecture with message queues like Kafka. The notification service would handle different types (email, push, SMS) with separate workers. I\'d implement rate limiting and use Redis for caching user preferences.',
+                    role: 'Software Engineer'
+                }
+            };
+            
+            const testCase = testCases[type];
+            if (testCase) {
+                document.getElementById('questionSelect').value = testCase.question;
+                document.getElementById('roleSelect').value = testCase.role;
+                document.getElementById('answerInput').value = testCase.answer;
+                
+                // Auto-test feedback
+                setTimeout(() => {
+                    testFeedback();
+                }, 100);
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '<div class="text-gray-500 text-center py-8">Click "Test Meta Feedback" to see recruiter evaluation</div>';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html> 

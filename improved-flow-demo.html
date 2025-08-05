@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Flow Demo - Microsoft Interview Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">🚀 Improved Flow Demo</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- CV Upload Flow -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📄 CV Upload Flow</h2>
+                
+                <div class="space-y-4">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="upload" class="text-blue-600 w-8 h-8"></i>
+                        </div>
+                        <p class="text-gray-600 mb-2">Click to select CV file</p>
+                        <p class="text-sm text-gray-500">Supported: PDF, DOC, DOCX, TXT</p>
+                    </div>
+                    
+                    <div id="progressDemo" class="hidden">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-blue-800">Analyzing CV...</span>
+                                <span id="demoProgress" class="text-sm text-blue-600">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="demoProgressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <div class="text-xs text-blue-600">
+                                <i data-feather="loader" class="w-4 h-4 inline mr-1 animate-spin"></i>
+                                Processing file and extracting information...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="completeDemo" class="hidden">
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <div class="flex items-center mb-2">
+                                <i data-feather="check-circle" class="text-green-600 w-5 h-5 mr-2"></i>
+                                <span class="font-medium text-green-800">Analysis Complete!</span>
+                            </div>
+                            <p class="text-sm text-green-700">CV has been successfully analyzed. Ready to start interview.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="simulateCVUpload()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            🎯 Simulate CV Upload
+                        </button>
+                        <button onclick="resetDemo()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                            🔄 Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interview Flow -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">🎤 Interview Flow</h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">Question 1/5</h3>
+                        <p class="text-gray-700 mb-4">Tell me about yourself and your background.</p>
+                        
+                        <div class="flex space-x-2 mb-4">
+                            <button onclick="simulateAnswer()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                                🎤 Record Answer
+                            </button>
+                            <button onclick="simulateTextAnswer()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                                ✏️ Type Answer
+                            </button>
+                        </div>
+                        
+                        <div id="answerStatus" class="hidden">
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                <p class="text-sm text-yellow-800">
+                                    <i data-feather="alert-circle" class="w-4 h-4 inline mr-1"></i>
+                                    Please answer the current question before proceeding to the next one.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="simulateNextQuestion()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                            ⏭️ Next Question
+                        </button>
+                        <button onclick="simulateCompleteInterview()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                            ✅ Complete Interview
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Improvements Summary -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">✨ Improvements Made</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
+                        <i data-feather="upload" class="text-blue-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-blue-800 mb-2">Auto CV Analysis</h3>
+                    <p class="text-sm text-blue-700">CV is automatically analyzed after upload with progress bar</p>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-3">
+                        <i data-feather="x" class="text-green-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-green-800 mb-2">Removed Analyze Button</h3>
+                    <p class="text-sm text-green-700">No more manual analyze button - process is automatic</p>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-3">
+                        <i data-feather="refresh-cw" class="text-purple-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-purple-800 mb-2">Import Different CV</h3>
+                    <p class="text-sm text-purple-700">Option to import different CV after analysis</p>
+                </div>
+                
+                <div class="bg-orange-50 p-4 rounded-lg">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-3">
+                        <i data-feather="pause" class="text-orange-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-orange-800 mb-2">No Auto Skip</h3>
+                    <p class="text-sm text-orange-700">Questions don't auto-skip - user must answer first</p>
+                </div>
+                
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-3">
+                        <i data-feather="check-circle" class="text-red-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-red-800 mb-2">Answer Tracking</h3>
+                    <p class="text-sm text-red-700">System tracks if current question has been answered</p>
+                </div>
+                
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-3">
+                        <i data-feather="eye" class="text-indigo-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-indigo-800 mb-2">Better Icons</h3>
+                    <p class="text-sm text-indigo-700">All icons are properly displayed using Feather Icons</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Instructions -->
+        <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-yellow-800 mb-4">🧪 Test Instructions</h2>
+            
+            <div class="space-y-3 text-yellow-700">
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">1</span>
+                    <div>
+                        <p class="font-medium">Test CV Upload Flow:</p>
+                        <p class="text-sm">Click "Simulate CV Upload" to see the progress bar and auto-analysis</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">2</span>
+                    <div>
+                        <p class="font-medium">Test Interview Flow:</p>
+                        <p class="text-sm">Try clicking "Next Question" without answering - should show warning</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">3</span>
+                    <div>
+                        <p class="font-medium">Test Answer Flow:</p>
+                        <p class="text-sm">Click "Record Answer" or "Type Answer" then try "Next Question"</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm font-medium mr-3">4</span>
+                    <div>
+                        <p class="font-medium">Test Complete Interview:</p>
+                        <p class="text-sm">Click "Complete Interview" to see the final state</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function simulateCVUpload() {
+            const progressDemo = document.getElementById('progressDemo');
+            const completeDemo = document.getElementById('completeDemo');
+            const progressBar = document.getElementById('demoProgressBar');
+            const progressText = document.getElementById('demoProgress');
+            
+            progressDemo.classList.remove('hidden');
+            completeDemo.classList.add('hidden');
+            
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                if (progressBar) progressBar.style.width = `${progress}%`;
+                if (progressText) progressText.textContent = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressDemo.classList.add('hidden');
+                        completeDemo.classList.remove('hidden');
+                    }, 500);
+                }
+            }, 200);
+        }
+        
+        function resetDemo() {
+            document.getElementById('progressDemo').classList.add('hidden');
+            document.getElementById('completeDemo').classList.add('hidden');
+            document.getElementById('answerStatus').classList.add('hidden');
+            
+            const progressBar = document.getElementById('demoProgressBar');
+            const progressText = document.getElementById('demoProgress');
+            if (progressBar) progressBar.style.width = '0%';
+            if (progressText) progressText.textContent = '0%';
+        }
+        
+        function simulateAnswer() {
+            document.getElementById('answerStatus').classList.add('hidden');
+            showSuccessMessage('Answer recorded successfully!');
+        }
+        
+        function simulateTextAnswer() {
+            document.getElementById('answerStatus').classList.add('hidden');
+            showSuccessMessage('Text answer submitted successfully!');
+        }
+        
+        function simulateNextQuestion() {
+            const answerStatus = document.getElementById('answerStatus');
+            answerStatus.classList.remove('hidden');
+            
+            setTimeout(() => {
+                answerStatus.classList.add('hidden');
+            }, 3000);
+        }
+        
+        function simulateCompleteInterview() {
+            showSuccessMessage('Interview completed successfully!');
+        }
+        
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            successDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i data-feather="check-circle" class="w-5 h-5 mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(successDiv);
+            feather.replace();
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html> 

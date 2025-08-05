@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR CV Analysis Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/tesseract.js@v4.1.1/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">🔍 OCR CV Analysis Demo</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- File Upload Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📄 Upload CV File</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Chọn file CV (PDF, Image, Text)
+                        </label>
+                        <input type="file" id="cvFile" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx" 
+                               class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    
+                    <button onclick="processFile()" 
+                            class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        🔍 Process CV with OCR
+                    </button>
+                </div>
+                
+                <div id="processingStatus" class="mt-4 p-3 bg-gray-100 rounded text-sm hidden">
+                    <div class="flex items-center">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                        <span id="statusText">Processing...</span>
+                    </div>
+                    <div id="progressBar" class="mt-2 w-full bg-gray-200 rounded-full h-2">
+                        <div id="progressFill" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">📊 Analysis Results</h2>
+                
+                <div id="results" class="space-y-4">
+                    <div class="text-gray-500 text-center py-8">
+                        Upload a CV file to see analysis results
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Raw Text Section -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">📝 Raw Extracted Text</h2>
+            <div id="rawText" class="bg-gray-50 p-4 rounded text-sm font-mono max-h-64 overflow-y-auto">
+                No text extracted yet...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+        let currentFile = null;
+
+        async function processFile() {
+            const fileInput = document.getElementById('cvFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Vui lòng chọn file trước');
+                return;
+            }
+
+            currentFile = file;
+            showProcessingStatus('Starting file analysis...', 0);
+            
+            try {
+                const fileType = file.type.toLowerCase();
+                const fileName = file.name.toLowerCase();
+                
+                let extractedText = '';
+                
+                if (fileType.includes('pdf') || fileName.endsWith('.pdf')) {
+                    extractedText = await processPDFFile(file);
+                } else if (fileType.includes('image') || fileName.match(/\.(png|jpg|jpeg|gif|bmp|tiff)$/)) {
+                    extractedText = await processImageFile(file);
+                } else if (fileType.includes('text') || fileName.match(/\.(txt|doc|docx)$/)) {
+                    extractedText = await processTextFile(file);
+                } else {
+                    throw new Error('Unsupported file type');
+                }
+                
+                showProcessingStatus('Analyzing extracted text...', 90);
+                
+                // Analyze the extracted text
+                const analysis = await analyzeCVWithAI(extractedText);
+                
+                showProcessingStatus('Complete!', 100);
+                displayResults(analysis, extractedText);
+                
+            } catch (error) {
+                console.error('Processing error:', error);
+                showError(`Lỗi xử lý: ${error.message}`);
+            }
+        }
+
+        async function processPDFFile(file) {
+            showProcessingStatus('Reading PDF file...', 10);
+            
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                
+                let fullText = '';
+                const totalPages = pdf.numPages;
+                
+                for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                    const progress = 10 + (pageNum / totalPages) * 40;
+                    showProcessingStatus(`Processing page ${pageNum}/${totalPages}...`, progress);
+                    
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 2.0 });
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    await page.render({ canvasContext: context, viewport }).promise;
+                    
+                    showProcessingStatus(`OCR processing page ${pageNum}...`, progress + 10);
+                    
+                    const { data: { text } } = await Tesseract.recognize(canvas, 'eng+vie', {
+                        logger: m => {
+                            if (m.status === 'recognizing text') {
+                                const ocrProgress = progress + 10 + (m.progress * 20);
+                                showProcessingStatus(`OCR: ${Math.round(m.progress * 100)}%`, ocrProgress);
+                            }
+                        }
+                    });
+                    
+                    fullText += `\n\n--- PAGE ${pageNum} ---\n\n${text}`;
+                }
+                
+                return fullText;
+                
+            } catch (error) {
+                console.error('PDF processing error:', error);
+                throw new Error(`PDF processing failed: ${error.message}`);
+            }
+        }
+
+        async function processImageFile(file) {
+            showProcessingStatus('Processing image with OCR...', 20);
+            
+            try {
+                const { data: { text } } = await Tesseract.recognize(file, 'eng+vie', {
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            const progress = 20 + (m.progress * 60);
+                            showProcessingStatus(`OCR: ${Math.round(m.progress * 100)}%`, progress);
+                        }
+                    }
+                });
+                
+                return text;
+                
+            } catch (error) {
+                console.error('Image processing error:', error);
+                throw new Error(`Image processing failed: ${error.message}`);
+            }
+        }
+
+        async function processTextFile(file) {
+            showProcessingStatus('Reading text file...', 50);
+            
+            try {
+                const text = await file.text();
+                return text;
+                
+            } catch (error) {
+                console.error('Text file processing error:', error);
+                throw new Error(`Text file processing failed: ${error.message}`);
+            }
+        }
+
+        async function analyzeCVWithAI(cvText) {
+            try {
+                // Simulate AI analysis (replace with actual API call)
+                const analysis = {
+                    basicInfo: {
+                        name: extractName(cvText),
+                        age: extractAge(cvText),
+                        currentPosition: extractPosition(cvText)
+                    },
+                    experience: extractExperience(cvText),
+                    education: extractEducation(cvText),
+                    skills: extractSkills(cvText),
+                    recommendedPosition: recommendPosition(cvText),
+                    note: 'Analysis completed successfully'
+                };
+                
+                return analysis;
+                
+            } catch (error) {
+                console.error('AI analysis error:', error);
+                return {
+                    basicInfo: { name: 'N/A', age: 'N/A', currentPosition: 'N/A' },
+                    experience: 'Could not extract experience',
+                    education: 'Could not extract education',
+                    skills: [],
+                    recommendedPosition: 'Software Engineer',
+                    note: `Analysis error: ${error.message}`
+                };
+            }
+        }
+
+        // Helper functions for text extraction
+        function extractName(text) {
+            const namePatterns = [
+                /(?:name|họ tên|tên):\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/i,
+                /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/g
+            ];
+            
+            for (const pattern of namePatterns) {
+                const match = text.match(pattern);
+                if (match) return match[1] || match[0];
+            }
+            return 'N/A';
+        }
+
+        function extractAge(text) {
+            const ageMatch = text.match(/(?:age|tuổi):\s*(\d+)/i);
+            return ageMatch ? ageMatch[1] : 'N/A';
+        }
+
+        function extractPosition(text) {
+            const positionPatterns = [
+                /(?:position|vị trí|chức vụ):\s*([^.\n]+)/i,
+                /(?:software engineer|developer|programmer|manager|analyst)/i
+            ];
+            
+            for (const pattern of positionPatterns) {
+                const match = text.match(pattern);
+                if (match) return match[1] || match[0];
+            }
+            return 'N/A';
+        }
+
+        function extractExperience(text) {
+            const expMatch = text.match(/(?:experience|kinh nghiệm|work history):\s*([^.\n]+)/i);
+            return expMatch ? expMatch[1] : 'Experience information not found';
+        }
+
+        function extractEducation(text) {
+            const eduMatch = text.match(/(?:education|học vấn|degree):\s*([^.\n]+)/i);
+            return eduMatch ? eduMatch[1] : 'Education information not found';
+        }
+
+        function extractSkills(text) {
+            const skills = [];
+            const skillKeywords = [
+                'JavaScript', 'Python', 'Java', 'C++', 'React', 'Angular', 'Vue',
+                'Node.js', 'Express', 'MongoDB', 'MySQL', 'PostgreSQL', 'AWS',
+                'Azure', 'Docker', 'Kubernetes', 'Git', 'Agile', 'Scrum'
+            ];
+            
+            skillKeywords.forEach(skill => {
+                if (text.toLowerCase().includes(skill.toLowerCase())) {
+                    skills.push(skill);
+                }
+            });
+            
+            return skills.length > 0 ? skills : ['Skills not detected'];
+        }
+
+        function recommendPosition(text) {
+            const textLower = text.toLowerCase();
+            
+            if (textLower.includes('frontend') || textLower.includes('react') || textLower.includes('angular')) {
+                return 'Frontend Developer';
+            } else if (textLower.includes('backend') || textLower.includes('node') || textLower.includes('api')) {
+                return 'Backend Developer';
+            } else if (textLower.includes('full stack') || textLower.includes('fullstack')) {
+                return 'Full Stack Developer';
+            } else if (textLower.includes('devops') || textLower.includes('aws') || textLower.includes('docker')) {
+                return 'DevOps Engineer';
+            } else {
+                return 'Software Engineer';
+            }
+        }
+
+        function showProcessingStatus(message, progress) {
+            const statusDiv = document.getElementById('processingStatus');
+            const statusText = document.getElementById('statusText');
+            const progressFill = document.getElementById('progressFill');
+            
+            statusDiv.classList.remove('hidden');
+            statusText.textContent = message;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        function displayResults(analysis, rawText) {
+            const resultsDiv = document.getElementById('results');
+            const rawTextDiv = document.getElementById('rawText');
+            
+            resultsDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-green-800 mb-2">✅ Analysis Complete</h3>
+                        <p class="text-sm text-green-700">CV has been successfully processed and analyzed</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">👤 Basic Info</h4>
+                            <p class="text-sm text-gray-600">Name: ${analysis.basicInfo.name}</p>
+                            <p class="text-sm text-gray-600">Age: ${analysis.basicInfo.age}</p>
+                            <p class="text-sm text-gray-600">Position: ${analysis.basicInfo.currentPosition}</p>
+                        </div>
+                        
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">💼 Experience</h4>
+                            <p class="text-sm text-gray-600">${analysis.experience}</p>
+                        </div>
+                        
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">🎓 Education</h4>
+                            <p class="text-sm text-gray-600">${analysis.education}</p>
+                        </div>
+                        
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">🔧 Skills</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${analysis.skills.map(skill => 
+                                    `<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">${skill}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-blue-800 mb-2">🎯 Recommended Position</h4>
+                        <p class="text-lg font-medium text-blue-700">${analysis.recommendedPosition}</p>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-yellow-800 mb-2">📝 Note</h4>
+                        <p class="text-sm text-yellow-700">${analysis.note}</p>
+                    </div>
+                </div>
+            `;
+            
+            rawTextDiv.innerHTML = rawText || 'No text extracted';
+        }
+
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold text-red-800 mb-2">❌ Error</h3>
+                    <p class="text-sm text-red-700">${message}</p>
+                </div>
+            `;
+        }
+
+        // Hide processing status when complete
+        function hideProcessingStatus() {
+            const statusDiv = document.getElementById('processingStatus');
+            statusDiv.classList.add('hidden');
+        }
+    </script>
+</body>
+</html> 
